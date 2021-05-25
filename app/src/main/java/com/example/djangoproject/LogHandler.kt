@@ -1,10 +1,12 @@
 package com.example.djangoproject
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_log.view.*
 
-class LogAdapter(val logList: List<Log>, valListener: (Task) -> Unit) :
+class LogAdapter(val logList: List<Log>, val listener: (Log) -> Unit) :
     RecyclerView.Adapter<LogAdapter.LogViewHandler>() {
 
     override fun onBindViewHolder(holder: LogViewHandler, position: Int) {
