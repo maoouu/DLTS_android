@@ -2,6 +2,7 @@ package com.example.djangoproject
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -40,9 +41,13 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
-            //TODO: link to a log creation page
-            logList.add(Log(id++, "Title [${id}]", "Description [${id}]", Date()))
-            recyclerView.adapter?.notifyDataSetChanged()
+            //TODO: create an activity that will handle a new entry
+
+            val intent = Intent(this, AddLogActivity::class.java)
+            //startActivityForResult(intent, newAc)
+
+            //logList.add(Log(id++, "Title [${id}]", "Description [${id}]", Date()))
+            //recyclerView.adapter?.notifyDataSetChanged()
         }
 
         // If there are no entries

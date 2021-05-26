@@ -9,11 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DjangoProject">
+        <activity android:name=".AddLogActivity"></activity>
         <activity
             android:name=".DashboardActivity"
             android:label="@string/title_activity_dashboard"
-            android:theme="@style/Theme.DjangoProject.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.DjangoProject.NoActionBar"></activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".SplashScreenActivity">

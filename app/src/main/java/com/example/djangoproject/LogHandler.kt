@@ -9,15 +9,17 @@ import kotlinx.android.synthetic.main.item_log.view.*
 class LogAdapter(val logList: List<Log>, val listener: (Log) -> Unit) :
     RecyclerView.Adapter<LogAdapter.LogViewHandler>() {
 
-    override fun onBindViewHolder(holder: LogViewHandler, position: Int) {
-        holder.bind(logList[position], listener)
-    }
-
-    override fun getItemCount() = logList.size
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogViewHandler {
         val rootView = LayoutInflater.from(parent.context).inflate(R.layout.item_log, parent, false)
         return LogViewHandler(rootView)
+    }
+
+    override fun getItemCount(): Int {
+        return logList.size
+    }
+
+    override fun onBindViewHolder(holder: LogViewHandler, position: Int) {
+        holder.bind(logList[position], listener)
     }
 
     class LogViewHandler(itemView : View) : RecyclerView.ViewHolder(itemView) {
