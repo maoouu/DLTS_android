@@ -49,18 +49,5 @@ class DashboardActivity : AppCompatActivity() {
         textNoTask.visibility = if (logList.size > 0) View.GONE else View.VISIBLE
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.options_menu, menu)
-
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        if (menu != null) {
-            (menu.findItem(R.id.search).actionView as SearchView).apply {
-                setSearchableInfo(searchManager.getSearchableInfo(componentName))
-            }
-        }
-
-        return true
-    }
-
     private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
 }
