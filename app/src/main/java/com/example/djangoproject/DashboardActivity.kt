@@ -1,8 +1,12 @@
 package com.example.djangoproject
 
+import android.app.SearchManager
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_dashboard.*
@@ -41,6 +45,19 @@ class DashboardActivity : AppCompatActivity() {
 
         // If there are no entries
         textNoTask.visibility = if (logList.size > 0) View.GONE else View.VISIBLE
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.options_menu, menu)
+
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        if (menu != null) {
+            (menu.findItem(R.id.search).actionView as SearchView).apply {
+                setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            }
+        }
+
+        return true
     }
 
     private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_LONG).show()

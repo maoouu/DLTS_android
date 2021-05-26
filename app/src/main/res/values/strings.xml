@@ -23,4 +23,6 @@
 
     <string name="cardTitle">Title</string>
     <string name="cardDescription">Description goes here</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Department, Status, etc.</string>
 </resources>
