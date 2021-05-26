@@ -19,14 +19,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/oxygen_bold"
-        android:text="Data Track and Log System"
+        android:text="@string/app_title"
         android:textSize="40sp" />
 
     <TextView
         android:id="@+id/textLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign in to continue"
+        android:text="@string/app_login_header"
         android:textSize="18sp"
         android:layout_marginTop="5dp"
         android:fontFamily="@font/oxygen_light"/>
@@ -73,14 +73,14 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="2dp"
             android:backgroundTint="#800000"
-            android:text="Login" />
+            android:text="@string/text_btnLogin" />
 
         <Button
             android:id="@+id/btnSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#E2E4E4"
-            android:text="New User? Sign Up Now"
+            android:text="@string/text_btnSignup"
             android:textColor="@color/black" />
 
     </LinearLayout>

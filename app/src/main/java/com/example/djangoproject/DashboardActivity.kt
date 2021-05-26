@@ -2,6 +2,7 @@ package com.example.djangoproject
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -22,6 +23,7 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
         setSupportActionBar(toolbar)
+
         val logList = ArrayList<Log>()
         val log1 = Log(id++, "CSMA", "To be approved by the President.", Date())
         val log2 = Log(id++, "ECE", "Pending.", Date())
@@ -39,6 +41,7 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
+            //TODO: link to a log creation page
             logList.add(Log(id++, "Title [${id}]", "Description [${id}]", Date()))
             recyclerView.adapter?.notifyDataSetChanged()
         }

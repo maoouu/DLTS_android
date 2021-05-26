@@ -25,4 +25,8 @@
     <string name="cardDescription">Description goes here</string>
     <string name="search_title">Search</string>
     <string name="search_hint">Department, Status, etc.</string>
+    <string name="app_title">Data Track and Log System</string>
+    <string name="app_login_header">Sign in to continue</string>
+    <string name="text_btnSignup">New User? Sign Up Now</string>
+    <string name="text_btnLogin">Login</string>
 </resources>
