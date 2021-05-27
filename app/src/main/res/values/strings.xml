@@ -29,4 +29,5 @@
     <string name="app_login_header">Sign in to continue</string>
     <string name="text_btnSignup">New User? Sign Up Now</string>
     <string name="text_btnLogin">Login</string>
+    <string name="addLogDescription">Enter the following entries in the corresponding fields below.</string>
 </resources>

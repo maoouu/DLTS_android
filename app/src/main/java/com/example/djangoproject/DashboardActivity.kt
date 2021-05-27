@@ -18,17 +18,17 @@ import kotlin.collections.ArrayList
 class DashboardActivity : AppCompatActivity() {
 
     var id = 0L
+    val logList = ArrayList<Log>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
         setSupportActionBar(toolbar)
 
-        val logList = ArrayList<Log>()
-        val log1 = Log(id++, "CSMA", "To be approved by the President.", Date())
-        val log2 = Log(id++, "ECE", "Pending.", Date())
-        val log3 = Log(id++, "BED", "Approved", Date())
-        val log4 = Log(id++, "CAFA", "Approved", Date())
+        val log1 = Log("CSMA", "To be approved by the President.", Date())
+        val log2 = Log("ECE", "Pending.", Date())
+        val log3 = Log("BED", "Approved", Date())
+        val log4 = Log("CAFA", "Approved", Date())
 
         logList.add(log1)
         logList.add(log2)
