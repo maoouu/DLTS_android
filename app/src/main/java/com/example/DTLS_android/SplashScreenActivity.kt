@@ -1,11 +1,10 @@
-package com.example.djangoproject
+package com.example.DTLS_android
 
 import android.content.Intent
 import android.view.WindowManager
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Window
 
 class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

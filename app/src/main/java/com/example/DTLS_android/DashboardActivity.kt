@@ -1,19 +1,16 @@
-package com.example.djangoproject
+package com.example.DTLS_android
 
-import android.app.SearchManager
-import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.util.*
 import kotlin.collections.ArrayList
+import android.content.Intent
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -24,6 +21,8 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
         setSupportActionBar(toolbar)
+
+        val fab: FloatingActionButton = findViewById(R.id.fab)
 
         val log1 = Log("CSMA", "To be approved by the President.", Date())
         val log2 = Log("ECE", "Pending.", Date())
@@ -42,9 +41,9 @@ class DashboardActivity : AppCompatActivity() {
 
         fab.setOnClickListener {
             //TODO: create an activity that will handle a new entry
-
             val intent = Intent(this, AddLogActivity::class.java)
-            //startActivityForResult(intent, newAc)
+            startActivity(intent)
+            finish()
 
             //logList.add(Log(id++, "Title [${id}]", "Description [${id}]", Date()))
             //recyclerView.adapter?.notifyDataSetChanged()

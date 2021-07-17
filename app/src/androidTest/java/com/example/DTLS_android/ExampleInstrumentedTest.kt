@@ -1,4 +1,4 @@
-package com.example.djangoproject
+package com.example.DTLS_android
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

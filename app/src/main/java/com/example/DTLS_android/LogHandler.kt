@@ -1,4 +1,4 @@
-package com.example.djangoproject
+package com.example.DTLS_android
 
 import android.view.LayoutInflater
 import android.view.View

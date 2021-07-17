@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.djangoproject">
+    package="com.example.DTLS_android">
 
     <application
         android:allowBackup="true"
@@ -9,14 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DjangoProject">
-        <activity android:name=".AddLogActivity"></activity>
+        <activity android:name="com.example.DTLS_android.AddLogActivity"></activity>
         <activity
-            android:name=".DashboardActivity"
+            android:name="com.example.DTLS_android.DashboardActivity"
             android:label="@string/title_activity_dashboard"
             android:theme="@style/Theme.DjangoProject.NoActionBar"></activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name="com.example.DTLS_android.RegisterActivity" />
+        <activity android:name="com.example.DTLS_android.LoginActivity" />
+        <activity android:name="com.example.DTLS_android.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

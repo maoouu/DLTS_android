@@ -1,4 +1,4 @@
-package com.example.djangoproject
+package com.example.DTLS_android
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

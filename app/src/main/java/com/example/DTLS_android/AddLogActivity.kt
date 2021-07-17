@@ -1,4 +1,4 @@
-package com.example.djangoproject
+package com.example.DTLS_android
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import androidx.core.content.ContextCompat
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.activity_splash.*
 import java.util.*
 
@@ -17,8 +18,8 @@ class AddLogActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_log)
 
-        val authorField: EditText = findViewById(R.id.inputAuthor)
-        val descriptionField: EditText = findViewById(R.id.inputDescription)
+        val authorField: TextInputEditText = findViewById(R.id.authorInput)
+        val descriptionField: TextInputEditText = findViewById(R.id.descriptionInput)
         val btnSave: Button = findViewById(R.id.btnSave)
         val btnCancel: Button = findViewById(R.id.btnCancel)
 
