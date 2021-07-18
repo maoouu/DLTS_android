@@ -23,19 +23,27 @@ class AddLogActivity : AppCompatActivity() {
         val btnSave: Button = findViewById(R.id.btnSave)
         val btnCancel: Button = findViewById(R.id.btnCancel)
 
+        btnSave.isEnabled = false
+
         authorField.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                TODO("Not yet implemented")
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
 
             override fun afterTextChanged(s: Editable?) {
-                TODO("Not yet implemented")
+                val author: String = authorField.text.toString().trim {it <= ' '}
+                val description: String = descriptionField.text.toString().trim {it <= ' '}
+                btnSave.isEnabled = author.isNotEmpty() && description.isNotEmpty()
             }
+        })
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (authorField.toString().trim { it <= ' ' }.isEmpty()) {
-                    markButtonDisable(btnSave)
-                }
+        descriptionField.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+            override fun afterTextChanged(s: Editable?) {
+                val author: String = authorField.text.toString().trim {it <= ' '}
+                val description: String = descriptionField.text.toString().trim {it <= ' '}
+                btnSave.isEnabled = author.isNotEmpty() && description.isNotEmpty()
             }
         })
 
@@ -51,11 +59,5 @@ class AddLogActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-    }
-
-    fun markButtonDisable(button: Button) {
-        button?.isEnabled = false
-        button?.setTextColor(ContextCompat.getColor(textView.context, R.color.white))
-        button?.setBackgroundColor(ContextCompat.getColor(textView.context, R.color.light_red))
     }
 }
