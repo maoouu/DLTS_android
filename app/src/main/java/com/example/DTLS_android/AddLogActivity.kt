@@ -1,5 +1,6 @@
 package com.example.DTLS_android
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -48,16 +49,24 @@ class AddLogActivity : AppCompatActivity() {
         })
 
         btnSave.setOnClickListener {
-            val author = authorField.text.toString().replace("\\s".toRegex(), "")
-            val description = descriptionField.text.toString().replace("\\s".toRegex(), "")
-            val newLogEntry = Log(author, description, Date())
-            //TODO: find out how to return this as a result
+            val author = authorField.text.toString().trim()
+            val description = descriptionField.text.toString().trim()
+
+            val data = Intent()
+            data.putExtra("AUTHOR", author)
+            data.putExtra("DESC", description)
+            setResult(Activity.RESULT_OK, data)
+            finish()
         }
 
         btnCancel.setOnClickListener {
-            val intent = Intent(this, DashboardActivity::class.java)
-            startActivity(intent)
+            setResult(Activity.RESULT_CANCELED)
             finish()
         }
+    }
+
+    override fun onBackPressed() {
+        setResult(Activity.RESULT_CANCELED)
+        finish()
     }
 }

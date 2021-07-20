@@ -1,5 +1,6 @@
 package com.example.DTLS_android
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,12 +11,13 @@ import kotlinx.android.synthetic.main.content_main.*
 import java.util.*
 import kotlin.collections.ArrayList
 import android.content.Intent
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class DashboardActivity : AppCompatActivity() {
 
-    var id = 0L
-    val logList = ArrayList<Log>()
+    private val logList = ArrayList<Log>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +31,18 @@ class DashboardActivity : AppCompatActivity() {
         val log3 = Log("BED", "Approved", Date())
         val log4 = Log("CAFA", "Approved", Date())
 
+        val resultContract = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult? ->
+            if (result?.resultCode == Activity.RESULT_OK) {
+                val newLog = Log(
+                    result.data?.getStringExtra("AUTHOR").toString(),
+                    result.data?.getStringExtra("DESC").toString(), Date()
+                )
+                logList.add(newLog)
+                recyclerView.adapter?.notifyDataSetChanged()
+                toast("A new entry has been added!")
+            }
+        }
+
         logList.add(log1)
         logList.add(log2)
         logList.add(log3)
@@ -40,13 +54,8 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
-            //TODO: create an activity that will handle a new entry
             val intent = Intent(this, AddLogActivity::class.java)
-            startActivity(intent)
-            finish()
-
-            //logList.add(Log(id++, "Title [${id}]", "Description [${id}]", Date()))
-            //recyclerView.adapter?.notifyDataSetChanged()
+            resultContract.launch(intent)
         }
 
         // If there are no entries

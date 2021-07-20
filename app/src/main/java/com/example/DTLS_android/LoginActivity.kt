@@ -23,10 +23,10 @@ class LoginActivity : AppCompatActivity() {
         val btnSignup: Button = findViewById(R.id.btnSignup)
 
         btnLogin.setOnClickListener{
+            val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
             val username = usernameField.text.toString().replace("\\s".toRegex(), "")
             val password = passwordField.text.toString().replace("\\s".toRegex(), "")
             if (username == "admin" && password == "password") {
-                val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
                 startActivity(intent)
                 Toast.makeText(this, "Login successful!", Toast.LENGTH_LONG).show()
                 finish()
