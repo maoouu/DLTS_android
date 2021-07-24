@@ -9,6 +9,11 @@ import android.widget.EditText
 import android.widget.Toast
 
 class LoginActivity : AppCompatActivity() {
+    private lateinit var usernameField: EditText
+    private lateinit var passwordField: EditText
+    private lateinit var btnLogin: Button
+    private lateinit var btnSignup: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(
@@ -17,10 +22,10 @@ class LoginActivity : AppCompatActivity() {
         )
         setContentView(R.layout.activity_login)
 
-        val usernameField: EditText = findViewById(R.id.usernameLoginField)
-        val passwordField: EditText = findViewById(R.id.passwordLoginField)
-        val btnLogin: Button = findViewById(R.id.btnLogin)
-        val btnSignup: Button = findViewById(R.id.btnSignup)
+        usernameField = findViewById(R.id.usernameLoginField)
+        passwordField = findViewById(R.id.passwordLoginField)
+        btnLogin = findViewById(R.id.btnLogin)
+        btnSignup = findViewById(R.id.btnSignup)
 
         btnLogin.setOnClickListener{
             val intent = Intent(this@LoginActivity, DashboardActivity::class.java)

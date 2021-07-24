@@ -17,25 +17,29 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class DashboardActivity : AppCompatActivity() {
 
+    var id: Long = 0
     private val logList = ArrayList<Log>()
+    private lateinit var fab: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
         setSupportActionBar(toolbar)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
+        fab = findViewById(R.id.fab)
 
-        val log1 = Log("CSMA", "To be approved by the President.", Date())
-        val log2 = Log("ECE", "Pending.", Date())
-        val log3 = Log("BED", "Approved", Date())
-        val log4 = Log("CAFA", "Approved", Date())
+        val log1 = Log(id++,"CSMA", "To be approved by the President.", Date())
+        val log2 = Log(id++,"ECE", "Pending.", Date())
+        val log3 = Log(id++,"BED", "Approved", Date())
+        val log4 = Log(id++,"CAFA", "Approved", Date())
 
         val resultContract = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult? ->
             if (result?.resultCode == Activity.RESULT_OK) {
                 val newLog = Log(
+                    id++,
                     result.data?.getStringExtra("AUTHOR").toString(),
-                    result.data?.getStringExtra("DESC").toString(), Date()
+                    result.data?.getStringExtra("DESC").toString(),
+                    Date()
                 )
                 logList.add(newLog)
                 recyclerView.adapter?.notifyDataSetChanged()
@@ -49,9 +53,7 @@ class DashboardActivity : AppCompatActivity() {
         logList.add(log4)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = LogAdapter(logList) {
-            toast("${it.title} Clicked")
-        }
+        recyclerView.adapter = LogAdapter(logList)
 
         fab.setOnClickListener {
             val intent = Intent(this, AddLogActivity::class.java)
@@ -62,5 +64,5 @@ class DashboardActivity : AppCompatActivity() {
         textNoTask.visibility = if (logList.size > 0) View.GONE else View.VISIBLE
     }
 
-    private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+    private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }

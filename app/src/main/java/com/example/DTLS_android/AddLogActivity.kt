@@ -7,22 +7,22 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
-import android.widget.EditText
-import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.activity_splash.*
-import java.util.*
 
 class AddLogActivity : AppCompatActivity() {
+    private lateinit var authorField: TextInputEditText
+    private lateinit var descriptionField: TextInputEditText
+    private lateinit var btnSave: Button
+    private lateinit var btnCancel: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_log)
 
-        val authorField: TextInputEditText = findViewById(R.id.authorInput)
-        val descriptionField: TextInputEditText = findViewById(R.id.descriptionInput)
-        val btnSave: Button = findViewById(R.id.btnSave)
-        val btnCancel: Button = findViewById(R.id.btnCancel)
+        authorField = findViewById(R.id.authorInput)
+        descriptionField = findViewById(R.id.descriptionInput)
+        btnSave = findViewById(R.id.btnSave)
+        btnCancel = findViewById(R.id.btnCancel)
 
         btnSave.isEnabled = false
 
