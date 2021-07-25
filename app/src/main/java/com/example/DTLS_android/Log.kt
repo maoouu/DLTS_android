@@ -4,7 +4,7 @@ import java.util.*
 
 data class Log(
     val id: Long,
-    val author: String,
-    val description: String,
-    val createdAt: Date
+    var author: String,
+    var description: String,
+    var createdAt: Date
     )

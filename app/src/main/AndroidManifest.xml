@@ -9,14 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DjangoProject">
-        <activity android:name="com.example.DTLS_android.AddLogActivity"></activity>
+        <activity android:name=".edit_log"></activity>
+        <activity android:name=".AddLogActivity" />
         <activity
-            android:name="com.example.DTLS_android.DashboardActivity"
+            android:name=".DashboardActivity"
             android:label="@string/title_activity_dashboard"
-            android:theme="@style/Theme.DjangoProject.NoActionBar"></activity>
-        <activity android:name="com.example.DTLS_android.RegisterActivity" />
-        <activity android:name="com.example.DTLS_android.LoginActivity" />
-        <activity android:name="com.example.DTLS_android.SplashScreenActivity">
+            android:theme="@style/Theme.DjangoProject.NoActionBar" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

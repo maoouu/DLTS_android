@@ -11,7 +11,7 @@ import com.google.android.material.textfield.TextInputEditText
 
 class AddLogActivity : AppCompatActivity() {
     private lateinit var authorField: TextInputEditText
-    private lateinit var descriptionField: TextInputEditText
+    private lateinit var descField: TextInputEditText
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
 
@@ -20,7 +20,7 @@ class AddLogActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_log)
 
         authorField = findViewById(R.id.authorInput)
-        descriptionField = findViewById(R.id.descriptionInput)
+        descField = findViewById(R.id.descriptionInput)
         btnSave = findViewById(R.id.btnSave)
         btnCancel = findViewById(R.id.btnCancel)
 
@@ -32,25 +32,25 @@ class AddLogActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 val author: String = authorField.text.toString().trim {it <= ' '}
-                val description: String = descriptionField.text.toString().trim {it <= ' '}
+                val description: String = descField.text.toString().trim {it <= ' '}
                 btnSave.isEnabled = author.isNotEmpty() && description.isNotEmpty()
             }
         })
 
-        descriptionField.addTextChangedListener(object: TextWatcher {
+        descField.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
 
             override fun afterTextChanged(s: Editable?) {
                 val author: String = authorField.text.toString().trim {it <= ' '}
-                val description: String = descriptionField.text.toString().trim {it <= ' '}
+                val description: String = descField.text.toString().trim {it <= ' '}
                 btnSave.isEnabled = author.isNotEmpty() && description.isNotEmpty()
             }
         })
 
         btnSave.setOnClickListener {
             val author = authorField.text.toString().trim()
-            val description = descriptionField.text.toString().trim()
+            val description = descField.text.toString().trim()
 
             val data = Intent()
             data.putExtra("AUTHOR", author)
