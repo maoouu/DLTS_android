@@ -1,8 +1,9 @@
 package com.example.DTLS_android
 
 import android.app.AlertDialog
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,6 +86,10 @@ class LogAdapter(private val logList: ArrayList<Log>) :
         val view = LayoutInflater.from(itemView.context).inflate(R.layout.activity_edit_log, null)
         authorField = view.findViewById(R.id.authorInput)
         descField = view.findViewById(R.id.descriptionInput)
+
+        authorField.setText(position.author)
+        descField.setText(position.description)
+
         val infoDialogBuilder = AlertDialog.Builder(itemView.context)
         infoDialogBuilder.setView(view)
             .setPositiveButton("Save") {
@@ -100,11 +105,37 @@ class LogAdapter(private val logList: ArrayList<Log>) :
                 dialog.dismiss()
             }
         val infoDialog = infoDialogBuilder.create()
-        //TODO: Disable save button when there are no changes
         infoDialog.window?.setBackgroundDrawable(ColorDrawable(ContextCompat
             .getColor(itemView.context, R.color.light_grey)))
         infoDialog.setContentView(view)
         infoDialog.show()
+
+        //Disable save button when there are no changes
+        infoDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+
+        authorField.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+
+            override fun afterTextChanged(p0: Editable?) {
+                val isModified: Boolean = !(authorField.text.toString() == position.author &&
+                        descField.text.toString() == position.description)
+
+                infoDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = isModified
+            }
+        })
+
+        descField.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+
+            override fun afterTextChanged(p0: Editable?) {
+                val isModified: Boolean = !(authorField.text.toString() == position.author &&
+                        descField.text.toString() == position.description)
+
+                infoDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = isModified
+            }
+        })
     }
 
     private fun deleteCard(itemView: View, logList: ArrayList<Log>, adapterPosition: Int) {
