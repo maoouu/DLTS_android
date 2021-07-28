@@ -15,7 +15,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:background="?attr/colorPrimary">
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/white">
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -31,6 +32,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:contentDescription="TODO"
         app:srcCompat="@drawable/ic_action_add"
+        app:backgroundTint="?attr/colorPrimary"
         tools:ignore="VectorDrawableCompat" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

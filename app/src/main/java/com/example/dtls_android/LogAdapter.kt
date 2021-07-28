@@ -1,4 +1,4 @@
-package com.example.DTLS_android
+package com.example.dtls_android
 
 import android.app.AlertDialog
 import android.graphics.drawable.ColorDrawable
@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,8 @@ class LogAdapter(private val logList: ArrayList<Log>) :
 
     private lateinit var authorField: TextInputEditText
     private lateinit var descField: TextInputEditText
+    private lateinit var authorTitle: TextView
+    private lateinit var description: TextView
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogViewHandler {
         val rootView = LayoutInflater.from(parent.context).inflate(R.layout.item_log, parent, false)
@@ -41,6 +44,7 @@ class LogAdapter(private val logList: ArrayList<Log>) :
             setOnClickListener {
                 //TODO: view the card
                 toastShort(itemView,"Item clicked!")
+                viewCard(itemView, logList[adapterPosition])
             }
 
             setOnLongClickListener {
@@ -81,23 +85,40 @@ class LogAdapter(private val logList: ArrayList<Log>) :
             .invoke(menu, true)
     }
 
-    private fun editCard(itemView: View, position: Log) {
-        //TODO: create a new layout for the delete button
-        val view = LayoutInflater.from(itemView.context).inflate(R.layout.activity_edit_log, null)
-        authorField = view.findViewById(R.id.authorInput)
-        descField = view.findViewById(R.id.descriptionInput)
+    private fun viewCard(view: View, position: Log) {
+        val card = LayoutInflater.from(view.context).inflate(R.layout.activity_view_log, null)
+        authorTitle = card.findViewById(R.id.viewCardAuthor)
+        description = card.findViewById(R.id.viewCardDesc)
+
+        authorTitle.text = position.author
+        description.text = position.description
+
+        val infoDialogBuilder = AlertDialog.Builder(card.context)
+        infoDialogBuilder.setView(card)
+
+        val infoDialog = infoDialogBuilder.create()
+        infoDialog.window?.setBackgroundDrawable(ColorDrawable(ContextCompat
+            .getColor(card.context, R.color.light_grey)))
+        infoDialog.setContentView(card)
+        infoDialog.show()
+    }
+
+    private fun editCard(view: View, position: Log) {
+        val editView = LayoutInflater.from(view.context).inflate(R.layout.activity_edit_log, null)
+        authorField = editView.findViewById(R.id.authorInput)
+        descField = editView.findViewById(R.id.descriptionInput)
 
         authorField.setText(position.author)
         descField.setText(position.description)
 
-        val infoDialogBuilder = AlertDialog.Builder(itemView.context)
-        infoDialogBuilder.setView(view)
+        val infoDialogBuilder = AlertDialog.Builder(editView.context)
+        infoDialogBuilder.setView(editView)
             .setPositiveButton("Save") {
                 dialog,_->
                 position.author = authorField.text.toString()
                 position.description = descField.text.toString()
                 notifyDataSetChanged()
-                toastShort(itemView, "Entry has been modified successfully.")
+                toastShort(editView, "Entry has been modified successfully.")
                 dialog.dismiss()
             }
             .setNegativeButton("Cancel") {
@@ -106,8 +127,8 @@ class LogAdapter(private val logList: ArrayList<Log>) :
             }
         val infoDialog = infoDialogBuilder.create()
         infoDialog.window?.setBackgroundDrawable(ColorDrawable(ContextCompat
-            .getColor(itemView.context, R.color.light_grey)))
-        infoDialog.setContentView(view)
+            .getColor(editView.context, R.color.light_grey)))
+        infoDialog.setContentView(editView)
         infoDialog.show()
 
         //Disable save button when there are no changes
@@ -138,8 +159,8 @@ class LogAdapter(private val logList: ArrayList<Log>) :
         })
     }
 
-    private fun deleteCard(itemView: View, logList: ArrayList<Log>, adapterPosition: Int) {
-        AlertDialog.Builder(itemView.context)
+    private fun deleteCard(view: View, logList: ArrayList<Log>, adapterPosition: Int) {
+        AlertDialog.Builder(view.context)
             .setTitle("Delete")
             .setIcon(R.drawable.ic_warning)
             .setMessage("Are you sure you want to permanently delete this item?")
@@ -147,7 +168,7 @@ class LogAdapter(private val logList: ArrayList<Log>) :
                     dialog,_->
                 logList.removeAt(adapterPosition)
                 notifyDataSetChanged()
-                toastShort(itemView, "Item has been deleted.")
+                toastShort(view, "Item has been deleted.")
                 dialog.dismiss()
             }
             .setNegativeButton("No") {

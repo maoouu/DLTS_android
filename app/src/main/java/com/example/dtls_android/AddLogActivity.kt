@@ -1,4 +1,4 @@
-package com.example.DTLS_android
+package com.example.dtls_android
 
 import android.app.Activity
 import android.content.Intent

@@ -24,6 +24,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/cardTitle"
+                android:fontFamily="@font/oxygen_bold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
             <TextView
@@ -32,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/cardDescription"
+                android:fontFamily="@font/oxygen_light"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
         </LinearLayout>

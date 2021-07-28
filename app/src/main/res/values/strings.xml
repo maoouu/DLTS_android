@@ -4,7 +4,7 @@
     <string name="arrow"><![CDATA[<<]]></string>
     <string name="enverga_logo">Enverga Logo</string>
     <string name="enverga_logo2">enverga logo</string>
-    <string name="title_activity_dashboard">Logbook</string>
+    <string name="title_activity_dashboard">Dashboard</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -30,4 +30,5 @@
     <string name="text_btnSignup">New User? Sign Up Now</string>
     <string name="text_btnLogin">Login</string>
     <string name="addLogDescription">Enter the following entries in the corresponding fields below.</string>
+    <string name="descSample">laoreet sit amet cursus sit amet</string>
 </resources>
