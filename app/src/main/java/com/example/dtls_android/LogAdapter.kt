@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.item_log.view.*
+import java.time.format.DateTimeFormatter
 
 class LogAdapter(private val logList: ArrayList<Log>) :
     RecyclerView.Adapter<LogAdapter.LogViewHandler>() {
@@ -38,8 +39,13 @@ class LogAdapter(private val logList: ArrayList<Log>) :
 
     inner class LogViewHandler(itemView : View) : RecyclerView.ViewHolder(itemView) {
         fun bind(log: Log) = with(itemView) {
+            val logDate = log.createdAt
+            val formatter = DateTimeFormatter.ofPattern("EEE HH:mm")
+            val formattedDate = logDate.format(formatter)
+
             cardTextTitle.text = log.author
             cardTextDescription.text = log.description
+            cardTextDate.text = formattedDate
 
             setOnClickListener {
                 //TODO: view the card
