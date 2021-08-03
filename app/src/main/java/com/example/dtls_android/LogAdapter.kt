@@ -7,17 +7,21 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.item_log.view.*
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
+// TODO: sync newLogList and tempLogList 'Edit' and 'Delete' functions
 class LogAdapter(private val logList: ArrayList<Log>) :
     RecyclerView.Adapter<LogAdapter.LogViewHandler>() {
+
+    var searchableList: MutableList<Log> = arrayListOf()
+    private var onNothingFound: ( () -> Unit )? = null
 
     private lateinit var authorField: TextInputEditText
     private lateinit var descField: TextInputEditText
@@ -109,6 +113,26 @@ class LogAdapter(private val logList: ArrayList<Log>) :
         infoDialog.show()
     }
 
+    private fun deleteCard(view: View, logList: ArrayList<Log>, adapterPosition: Int) {
+        AlertDialog.Builder(view.context)
+            .setTitle("Delete")
+            .setIcon(R.drawable.ic_warning)
+            .setMessage("Are you sure you want to permanently delete this item?")
+            .setPositiveButton("Yes") {
+                    dialog,_->
+                logList.removeAt(adapterPosition)
+                notifyDataSetChanged()
+                toastShort(view, "Item has been deleted.")
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") {
+                    dialog,_->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+
     private fun editCard(view: View, position: Log) {
         val editView = LayoutInflater.from(view.context).inflate(R.layout.activity_edit_log, null)
         authorField = editView.findViewById(R.id.authorInput)
@@ -163,26 +187,6 @@ class LogAdapter(private val logList: ArrayList<Log>) :
                 infoDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = isModified
             }
         })
-    }
-
-    private fun deleteCard(view: View, logList: ArrayList<Log>, adapterPosition: Int) {
-        AlertDialog.Builder(view.context)
-            .setTitle("Delete")
-            .setIcon(R.drawable.ic_warning)
-            .setMessage("Are you sure you want to permanently delete this item?")
-            .setPositiveButton("Yes") {
-                    dialog,_->
-                logList.removeAt(adapterPosition)
-                notifyDataSetChanged()
-                toastShort(view, "Item has been deleted.")
-                dialog.dismiss()
-            }
-            .setNegativeButton("No") {
-                    dialog,_->
-                dialog.dismiss()
-            }
-            .create()
-            .show()
     }
 
     private fun toastShort(view: View, str: String) {
