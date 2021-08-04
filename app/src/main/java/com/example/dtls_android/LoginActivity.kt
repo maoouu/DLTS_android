@@ -36,13 +36,14 @@ class LoginActivity : AppCompatActivity() {
 
         btnLogin.setOnClickListener{
             val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-            val username = usernameField.text.toString().replace("\\s".toRegex(), "")
-            val password = passwordField.text.toString().replace("\\s".toRegex(), "")
+            val username = usernameField.text.toString().trim()
+            val password = passwordField.text.toString().trim()
             if (username == "admin" && password == "password") {
                 startActivity(intent)
                 Toast.makeText(this, "Login successful!", Toast.LENGTH_LONG).show()
                 finish()
             } else {
+                usernameField.setText("")
                 passwordField.setText("")
                 Toast.makeText(this, "Invalid login, please try again", Toast.LENGTH_LONG).show()
             }

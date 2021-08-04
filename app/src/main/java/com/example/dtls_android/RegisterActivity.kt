@@ -24,6 +24,8 @@ class RegisterActivity : AppCompatActivity() {
             )
         }
 
+        // TODO: create a registration function
+
         btnBack = findViewById(R.id.btnBack)
 
         btnBack.setOnClickListener{
