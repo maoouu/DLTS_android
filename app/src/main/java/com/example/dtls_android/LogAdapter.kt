@@ -16,12 +16,8 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
-// TODO: sync newLogList and tempLogList 'Edit' and 'Delete' functions
-class LogAdapter(private val logList: ArrayList<Log>) :
+class LogAdapter(private val tempLogList: ArrayList<Log>, private val newLogList: ArrayList<Log>) :
     RecyclerView.Adapter<LogAdapter.LogViewHandler>() {
-
-    var searchableList: MutableList<Log> = arrayListOf()
-    private var onNothingFound: ( () -> Unit )? = null
 
     private lateinit var authorField: TextInputEditText
     private lateinit var descField: TextInputEditText
@@ -34,11 +30,11 @@ class LogAdapter(private val logList: ArrayList<Log>) :
     }
 
     override fun getItemCount(): Int {
-        return logList.size
+        return tempLogList.size
     }
 
     override fun onBindViewHolder(holder: LogViewHandler, position: Int) {
-        holder.bind(logList[position])
+        holder.bind(tempLogList[position])
     }
 
     inner class LogViewHandler(itemView : View) : RecyclerView.ViewHolder(itemView) {
@@ -54,7 +50,7 @@ class LogAdapter(private val logList: ArrayList<Log>) :
             setOnClickListener {
                 //TODO: view the card
                 toastShort(itemView,"Item clicked!")
-                viewCard(itemView, logList[adapterPosition])
+                viewCard(itemView, tempLogList[adapterPosition])
             }
 
             setOnLongClickListener {
@@ -66,7 +62,8 @@ class LogAdapter(private val logList: ArrayList<Log>) :
     }
 
     private fun popupMenu(adapterPosition: Int, itemView: View, view: View) {
-        val position = logList[adapterPosition]
+        val tempLogData = tempLogList[adapterPosition]
+        val newLogData = newLogList[adapterPosition]
         val options = PopupMenu(itemView.context, view)
         options.inflate(R.menu.card_menu)
         options.setOnMenuItemClickListener {
@@ -74,13 +71,13 @@ class LogAdapter(private val logList: ArrayList<Log>) :
                 R.id.editCard -> {
                     //TODO: edit prompt
                     toastShort(itemView,"Edit Button is clicked")
-                    editCard(itemView, position)
+                    editCard(itemView, tempLogData, newLogData)
                     true
                 }
                 R.id.deleteCard -> {
                     //TODO: delete prompt
                     toastShort(itemView,"Delete Button is clicked")
-                    deleteCard(itemView, logList, adapterPosition)
+                    deleteCard(itemView, tempLogList, newLogList, adapterPosition)
                     true
                 }
                 else -> true
@@ -113,14 +110,16 @@ class LogAdapter(private val logList: ArrayList<Log>) :
         infoDialog.show()
     }
 
-    private fun deleteCard(view: View, logList: ArrayList<Log>, adapterPosition: Int) {
+    private fun deleteCard(view: View, tempLogList: ArrayList<Log>, newLogList: ArrayList<Log>,
+                           adapterPosition: Int) {
         AlertDialog.Builder(view.context)
             .setTitle("Delete")
             .setIcon(R.drawable.ic_warning)
             .setMessage("Are you sure you want to permanently delete this item?")
             .setPositiveButton("Yes") {
                     dialog,_->
-                logList.removeAt(adapterPosition)
+                tempLogList.removeAt(adapterPosition)
+                newLogList.removeAt(adapterPosition)
                 notifyDataSetChanged()
                 toastShort(view, "Item has been deleted.")
                 dialog.dismiss()
@@ -133,20 +132,22 @@ class LogAdapter(private val logList: ArrayList<Log>) :
             .show()
     }
 
-    private fun editCard(view: View, position: Log) {
+    private fun editCard(view: View, tempLogData: Log, newLogData: Log) {
         val editView = LayoutInflater.from(view.context).inflate(R.layout.activity_edit_log, null)
         authorField = editView.findViewById(R.id.authorInput)
         descField = editView.findViewById(R.id.descriptionInput)
 
-        authorField.setText(position.author)
-        descField.setText(position.description)
+        authorField.setText(tempLogData.author)
+        descField.setText(tempLogData.description)
 
         val infoDialogBuilder = AlertDialog.Builder(editView.context)
         infoDialogBuilder.setView(editView)
             .setPositiveButton("Save") {
                 dialog,_->
-                position.author = authorField.text.toString()
-                position.description = descField.text.toString()
+                tempLogData.author = authorField.text.toString()
+                newLogData.author = authorField.text.toString()
+                tempLogData.description = descField.text.toString()
+                newLogData.description = descField.text.toString()
                 notifyDataSetChanged()
                 toastShort(editView, "Entry has been modified successfully.")
                 dialog.dismiss()
@@ -169,8 +170,8 @@ class LogAdapter(private val logList: ArrayList<Log>) :
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
 
             override fun afterTextChanged(p0: Editable?) {
-                val isModified: Boolean = !(authorField.text.toString() == position.author &&
-                        descField.text.toString() == position.description)
+                val isModified: Boolean = !(authorField.text.toString() == tempLogData.author &&
+                        descField.text.toString() == tempLogData.description)
 
                 infoDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = isModified
             }
@@ -181,8 +182,8 @@ class LogAdapter(private val logList: ArrayList<Log>) :
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
 
             override fun afterTextChanged(p0: Editable?) {
-                val isModified: Boolean = !(authorField.text.toString() == position.author &&
-                        descField.text.toString() == position.description)
+                val isModified: Boolean = !(authorField.text.toString() == tempLogData.author &&
+                        descField.text.toString() == tempLogData.description)
 
                 infoDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = isModified
             }

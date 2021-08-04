@@ -15,6 +15,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.time.LocalDateTime
@@ -118,6 +119,7 @@ class DashboardActivity : AppCompatActivity() {
         val search = menu?.findItem(R.id.action_search)
         val searchView = search?.actionView as SearchView
 
+        searchView.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
         searchView.queryHint = "Search"
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -130,9 +132,11 @@ class DashboardActivity : AppCompatActivity() {
 
                 if (searchText.isNotBlank()) {
                     newLogList.forEach {
-                        val queryFound = it.author
-                            .toLowerCase(Locale.getDefault())
-                            .contains(searchText)
+                        val itemAuthor = it.author.toLowerCase(Locale.getDefault())
+                        val itemDesc = it.description.toLowerCase(Locale.getDefault())
+
+                        val queryFound: Boolean =
+                            itemAuthor.contains(searchText) || itemDesc.contains(searchText)
 
                         if (queryFound) {
                             tempLogList.add(it)
@@ -163,7 +167,7 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         tempLogList.addAll(newLogList)
-        adapter = LogAdapter(tempLogList)
+        adapter = LogAdapter(tempLogList, newLogList)
     }
 
 
