@@ -9,4 +9,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_red">#D32114</color>
+    <color name="dark_maroon">#800000</color>
 </resources>

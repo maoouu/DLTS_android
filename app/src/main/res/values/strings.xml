@@ -31,4 +31,5 @@
     <string name="text_btnLogin">Login</string>
     <string name="addLogDescription">Enter the following entries in the corresponding fields below.</string>
     <string name="descSample">laoreet sit amet cursus sit amet</string>
+    <string name="BUILD_VER">dev build 08.06.2021</string>
 </resources>

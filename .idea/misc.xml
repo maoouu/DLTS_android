@@ -4,11 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_add_log.xml" value="0.17708333333333334" />
-        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_dashboard.xml" value="0.17798913043478262" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_dashboard.xml" value="0.4839650145772595" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_login.xml" value="0.22056159420289856" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/content_main.xml" value="0.12613981762917933" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/content_toolbar.xml" value="0.259375" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/footer_menu.xml" value="0.23278985507246377" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/item_log.xml" value="0.4" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/nav_header.xml" value="0.4" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/menu/card_menu.xml" value="0.259375" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/menu/nav_menu.xml" value="0.259375" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/menu/search_menu.xml" value="0.259375" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2755208333333333" />
       </map>
