@@ -7,9 +7,9 @@ import com.example.dtls_android.LoginActivity
 
 class LoginPref {
 
-    lateinit var sharedPreferences: SharedPreferences
-    lateinit var editor: SharedPreferences.Editor
-    lateinit var context: Context
+    var sharedPreferences: SharedPreferences
+    var editor: SharedPreferences.Editor
+    var context: Context
 
     val PRIVATEMODE: Int = 0
 
@@ -20,9 +20,9 @@ class LoginPref {
     }
 
     companion object {
-        val SHARED_PREF = "Login_Preferences"
-        val IS_LOGGED_IN = "isLoggedIn"
-        val USERNAME_KEY = "username_key"
+        const val SHARED_PREF = "Login_Preferences"
+        const val IS_LOGGED_IN = "isLoggedIn"
+        const val USERNAME_KEY = "username_key"
     }
 
     fun createLoginSession(username: String) {

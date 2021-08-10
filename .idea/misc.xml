@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/ic_signout.xml" value="0.14537037037037037" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_add_log.xml" value="0.17708333333333334" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_dashboard.xml" value="0.4839650145772595" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_login.xml" value="0.22056159420289856" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_register.xml" value="0.23278985507246377" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/content_main.xml" value="0.12613981762917933" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/content_toolbar.xml" value="0.259375" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/footer_menu.xml" value="0.23278985507246377" />

@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dtls_android.databinding.ItemLogBinding
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.item_log.view.*
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
@@ -38,14 +38,17 @@ class LogAdapter(private val tempLogList: ArrayList<Log>, private val newLogList
     }
 
     inner class LogViewHandler(itemView : View) : RecyclerView.ViewHolder(itemView) {
+
+        private val binding = ItemLogBinding.bind(itemView)
+
         fun bind(log: Log) = with(itemView) {
             val logDate = log.createdAt
             val formatter = DateTimeFormatter.ofPattern("EEE HH:mm")
             val formattedDate = logDate.format(formatter)
 
-            cardTextTitle.text = log.author
-            cardTextDescription.text = log.description
-            cardTextDate.text = formattedDate
+            binding.cardTextTitle.text = log.author
+            binding.cardTextDescription.text = log.description
+            binding.cardTextDate.text = formattedDate
 
             setOnClickListener {
                 //TODO: view the card

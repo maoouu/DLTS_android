@@ -1,15 +1,12 @@
 package com.example.dtls_android
 
-import android.app.Activity
 import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlin.collections.ArrayList
 import android.content.Intent
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dtls_android.databinding.ActivityDashboardBinding
 import com.example.dtls_android.session.LoginPref
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -33,6 +31,8 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private var id = 0
 
+    private lateinit var binding: ActivityDashboardBinding
+
     private lateinit var newLogList: ArrayList<Log>
     private lateinit var tempLogList: ArrayList<Log>
 
@@ -41,17 +41,44 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mNavigationView: NavigationView
     private lateinit var mDrawerLayout: DrawerLayout
-
     private lateinit var addButton: FloatingActionButton
     private lateinit var textNoTask: TextView
     private lateinit var resultContract: ActivityResultLauncher<Intent>
 
+    private lateinit var mheaderView: View
+    private lateinit var mheaderUsername: TextView
+    private lateinit var mheaderDesc: TextView
+
     lateinit var session: LoginPref
+
+    private val sampleAuthor: Array<String> = arrayOf(
+        "MSEUF",
+        "AMA",
+        "DLL",
+        "FEU"
+    )
+
+    private val sampleDesc: Array<String> = arrayOf(
+        "Approved",
+        "Pending",
+        "Declined",
+        "Acknowledged"
+    )
+
+    private val sampleDate: Array<LocalDateTime> = arrayOf(
+        LocalDateTime.of(2020, 7, 15, 10, 30),
+        LocalDateTime.of(2020, 8, 1, 12, 25),
+        LocalDateTime.of(2020, 11, 23, 16, 6),
+        LocalDateTime.of(2020, 12, 30, 13, 1)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard)
-        setSupportActionBar(toolbar)
+        binding = ActivityDashboardBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        setupToolbar()
+
         session = LoginPref(this)
         session.checkLogin()
 
@@ -61,8 +88,15 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         mNavigationView = findViewById(R.id.nav_view)
         mDrawerLayout = findViewById(R.id.drawer_layout)
 
+        mheaderView = mNavigationView.getHeaderView(0)
+        mheaderUsername = mheaderView.findViewById(R.id.nav_header_username)
+        mheaderDesc = mheaderView.findViewById(R.id.nav_header_desc)
+
+        mheaderUsername.text = session.getUserDetails()
+        mheaderDesc.text = "Hello World!~"
+
         val toggle = ActionBarDrawerToggle(
-            this, mDrawerLayout, toolbar, 0, 0
+            this, mDrawerLayout, binding.toolbar, 0, 0
         )
         mDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -78,10 +112,9 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         mRecyclerView.layoutManager = layoutManager
         mRecyclerView.adapter = adapter
 
-
         resultContract = registerForActivityResult(ActivityResultContracts
             .StartActivityForResult()) { result: ActivityResult? ->
-            if (result?.resultCode == Activity.RESULT_OK) {
+            if (result?.resultCode == RESULT_OK) {
                 val newLog = Log(
                     id++,
                     result.data?.getStringExtra("AUTHOR").toString(),
@@ -106,7 +139,6 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             val intent = Intent(this, AddLogActivity::class.java)
             resultContract.launch(intent)
         }
-
 
     }
 
@@ -178,6 +210,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             .setPositiveButton("Yes") {
                 dialog,_->
                 session.logoutUser()
+                finish()
                 dialog.dismiss()
             }
             .setNegativeButton("No") {
@@ -207,26 +240,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         textNoTask.visibility = if (logList.size > 0) View.GONE else View.VISIBLE
     }
 
-    companion object {
-        val sampleAuthor: Array<String> = arrayOf(
-        "MSEUF",
-        "AMA",
-        "DLL",
-        "FEU"
-        )
-
-        val sampleDesc: Array<String> = arrayOf(
-        "Approved",
-        "Pending",
-        "Declined",
-        "Acknowledged"
-        )
-
-        val sampleDate: Array<LocalDateTime> = arrayOf(
-        LocalDateTime.of(2020, 7, 15, 10, 30),
-        LocalDateTime.of(2020, 8, 1, 12, 25),
-        LocalDateTime.of(2020, 11, 23, 16, 6),
-        LocalDateTime.of(2020, 12, 30, 13, 1)
-        )
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar)
     }
 }

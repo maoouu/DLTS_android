@@ -9,7 +9,12 @@ import android.text.TextWatcher
 import android.widget.Button
 import com.google.android.material.textfield.TextInputEditText
 
-class AddLogActivity : AppCompatActivity() {
+interface AddLogWatcher: TextWatcher {
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+}
+
+class AddLogActivity : AppCompatActivity(), AddLogWatcher {
     private lateinit var authorField: TextInputEditText
     private lateinit var descField: TextInputEditText
     private lateinit var btnSave: Button
@@ -26,38 +31,10 @@ class AddLogActivity : AppCompatActivity() {
 
         btnSave.isEnabled = false
 
-        authorField.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+        authorField.addTextChangedListener(this)
+        descField.addTextChangedListener(this)
 
-            override fun afterTextChanged(s: Editable?) {
-                val author: String = authorField.text.toString().trim {it <= ' '}
-                val description: String = descField.text.toString().trim {it <= ' '}
-                btnSave.isEnabled = author.isNotEmpty() && description.isNotEmpty()
-            }
-        })
-
-        descField.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
-
-            override fun afterTextChanged(s: Editable?) {
-                val author: String = authorField.text.toString().trim {it <= ' '}
-                val description: String = descField.text.toString().trim {it <= ' '}
-                btnSave.isEnabled = author.isNotEmpty() && description.isNotEmpty()
-            }
-        })
-
-        btnSave.setOnClickListener {
-            val author = authorField.text.toString().trim()
-            val description = descField.text.toString().trim()
-
-            val data = Intent()
-            data.putExtra("AUTHOR", author)
-            data.putExtra("DESC", description)
-            setResult(Activity.RESULT_OK, data)
-            finish()
-        }
+        btnSave.setOnClickListener {  save() }
 
         btnCancel.setOnClickListener {
             setResult(Activity.RESULT_CANCELED)
@@ -65,8 +42,25 @@ class AddLogActivity : AppCompatActivity() {
         }
     }
 
+    override fun afterTextChanged(s: Editable?) {
+        val author: String = authorField.text.toString().trim {it <= ' '}
+        val description: String = descField.text.toString().trim {it <= ' '}
+        btnSave.isEnabled = author.isNotEmpty() && description.isNotEmpty()
+    }
+
     override fun onBackPressed() {
         setResult(Activity.RESULT_CANCELED)
+        finish()
+    }
+
+    private fun save() {
+        val author = authorField.text.toString().trim()
+        val description = descField.text.toString().trim()
+
+        val data = Intent()
+        data.putExtra("AUTHOR", author)
+        data.putExtra("DESC", description)
+        setResult(Activity.RESULT_OK, data)
         finish()
     }
 }
