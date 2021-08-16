@@ -5,6 +5,7 @@ import java.time.LocalDateTime
 data class Log(
     val id: Int,
     var author: String,
-    var description: String,
-    var createdAt: LocalDateTime
+    var status: String,
+    var createdAt: LocalDateTime,
+    var description: String = "None.",
     )

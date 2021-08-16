@@ -30,6 +30,23 @@
     <string name="text_btnSignup">New User? Sign Up Now</string>
     <string name="text_btnLogin">Login</string>
     <string name="addLogDescription">Enter the following entries in the corresponding fields below.</string>
-    <string name="descSample">laoreet sit amet cursus sit amet</string>
+    <string name="descSample">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+        Aenean commodo ligula eget dolor. Aenean massa.
+        Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+        Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
+        Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a,
+        venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus</string>
+
     <string name="BUILD_VER">dev build 08.06.2021</string>
+    <string name="viewDateTextString">last edited %1$s</string>
+
+    <string-array name="status">
+        <item>Pending</item>
+        <item>Acknowledged</item>
+        <item>Endorsed</item>
+        <item>Recommended to the President</item>
+        <item>Approved</item>
+        <item>Denied</item>
+        <item>Returned</item>
+    </string-array>
 </resources>

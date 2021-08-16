@@ -3,15 +3,35 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/circle_blue.xml" value="0.2755208333333333" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/ic_signout.xml" value="0.14537037037037037" />
-        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_add_log.xml" value="0.17708333333333334" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/outlined_acknowledged.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/outlined_approved.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/outlined_denied.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/outlined_endorsed.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/outlined_pending.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/outlined_recommended.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/outlined_returned.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/status_acknowledged.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/status_approved.xml" value="0.144" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/status_denied.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/status_endorsed.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/status_pending.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/status_recommended.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/status_returned.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/drawable/tag_status.xml" value="0.2755208333333333" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_add_log.xml" value="0.264" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_dashboard.xml" value="0.4839650145772595" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_edit_log.xml" value="0.15670289855072464" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_login.xml" value="0.22056159420289856" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_register.xml" value="0.23278985507246377" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/activity_view_log.xml" value="0.264" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/content_main.xml" value="0.12613981762917933" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/content_toolbar.xml" value="0.259375" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/dropdown_item.xml" value="0.25" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/footer_menu.xml" value="0.23278985507246377" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/item_log.xml" value="0.4" />
+        <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/material_spinner_item.xml" value="0.2536231884057971" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/layout/nav_header.xml" value="0.4" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/menu/card_menu.xml" value="0.259375" />
         <entry key="..\:/CodeFiles/AndroidStudioProjects/DTLS_android/app/src/main/res/menu/nav_menu.xml" value="0.259375" />

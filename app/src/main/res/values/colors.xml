@@ -7,7 +7,17 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="grey">#606060</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_red">#D32114</color>
     <color name="dark_maroon">#800000</color>
+
+    <!-- Status Indicator Colors -->
+    <color name="approved">#8ECA68</color>
+    <color name="pending">#CABA68</color>
+    <color name="recommended">#1F44FF</color>
+    <color name="denied">#C83B31</color>
+    <color name="endorsed">#C459DC</color>
+    <color name="returned">#60B8B5</color>
+    <color name="acknowledged">#6C6C6C</color>
 </resources>

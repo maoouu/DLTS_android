@@ -52,24 +52,35 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     lateinit var session: LoginPref
 
     private val sampleAuthor: Array<String> = arrayOf(
-        "MSEUF",
-        "AMA",
-        "DLL",
-        "FEU"
+        "Corey",
+        "Alvin",
+        "Jake",
+        "Bob",
+        "John Doe",
     )
 
-    private val sampleDesc: Array<String> = arrayOf(
+    private val sampleStatus: Array<String> = arrayOf(
         "Approved",
         "Pending",
-        "Declined",
-        "Acknowledged"
+        "Acknowledged",
+        "Denied",
+        "Recommended to the President",
     )
 
     private val sampleDate: Array<LocalDateTime> = arrayOf(
         LocalDateTime.of(2020, 7, 15, 10, 30),
         LocalDateTime.of(2020, 8, 1, 12, 25),
         LocalDateTime.of(2020, 11, 23, 16, 6),
-        LocalDateTime.of(2020, 12, 30, 13, 1)
+        LocalDateTime.of(2020, 12, 30, 13, 1),
+        LocalDateTime.of(2020, 10, 30, 12, 5)
+    )
+
+    private val sampleDesc: Array<String> = arrayOf(
+        "Awaiting Request",
+        "Info on Project",
+        "Hello World!",
+        "Travel Budget",
+        "Request to Promote",
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,8 +129,9 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 val newLog = Log(
                     id++,
                     result.data?.getStringExtra("AUTHOR").toString(),
+                    result.data?.getStringExtra("STATUS").toString(),
+                    LocalDateTime.now(),
                     result.data?.getStringExtra("DESC").toString(),
-                    LocalDateTime.now()
                 )
                 newLogList.add(newLog)
                 tempLogList.add(newLog)
@@ -162,7 +174,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 if (searchText.isNotBlank()) {
                     newLogList.forEach {
                         val itemAuthor = it.author.toLowerCase(Locale.getDefault())
-                        val itemDesc = it.description.toLowerCase(Locale.getDefault())
+                        val itemDesc = it.status.toLowerCase(Locale.getDefault())
 
                         val queryFound: Boolean =
                             itemAuthor.contains(searchText) || itemDesc.contains(searchText)
@@ -221,20 +233,24 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             .show()
     }
 
-
     private fun getSampleData() {
         // Remove empty text upon generating sample data
         textNoTask.visibility = View.GONE
 
         for (item in sampleAuthor.indices) {
-            val sampleData = Log(id++, sampleAuthor[item], sampleDesc[item], sampleDate[item])
+            val sampleData = Log(
+                id++,
+                sampleAuthor[item],
+                sampleStatus[item],
+                sampleDate[item],
+                sampleDesc[item]
+            )
             newLogList.add(sampleData)
         }
 
         tempLogList.addAll(newLogList)
         adapter = LogAdapter(tempLogList, newLogList)
     }
-
 
     private fun checkIsEmpty(logList: ArrayList<Log>) {
         textNoTask.visibility = if (logList.size > 0) View.GONE else View.VISIBLE

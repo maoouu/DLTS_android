@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import com.google.android.material.textfield.TextInputEditText
 
@@ -15,8 +17,11 @@ interface AddLogWatcher: TextWatcher {
 }
 
 class AddLogActivity : AppCompatActivity(), AddLogWatcher {
+    private lateinit var autoCompleteTextView: AutoCompleteTextView
     private lateinit var authorField: TextInputEditText
     private lateinit var descField: TextInputEditText
+    private lateinit var dropdownAdapter: ArrayAdapter<String>
+    private lateinit var status: Array<String>
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
 
@@ -29,13 +34,17 @@ class AddLogActivity : AppCompatActivity(), AddLogWatcher {
         btnSave = findViewById(R.id.btnSave)
         btnCancel = findViewById(R.id.btnCancel)
 
-        btnSave.isEnabled = false
+        status = resources.getStringArray(R.array.status)
+        dropdownAdapter = ArrayAdapter(this, R.layout.dropdown_item, status)
+        autoCompleteTextView = findViewById(R.id.statusFieldAuto)
+        autoCompleteTextView.setAdapter(dropdownAdapter)
 
+        btnSave.isEnabled = false
         authorField.addTextChangedListener(this)
         descField.addTextChangedListener(this)
+        autoCompleteTextView.addTextChangedListener(this)
 
         btnSave.setOnClickListener {  save() }
-
         btnCancel.setOnClickListener {
             setResult(Activity.RESULT_CANCELED)
             finish()
@@ -43,9 +52,10 @@ class AddLogActivity : AppCompatActivity(), AddLogWatcher {
     }
 
     override fun afterTextChanged(s: Editable?) {
-        val author: String = authorField.text.toString().trim {it <= ' '}
-        val description: String = descField.text.toString().trim {it <= ' '}
-        btnSave.isEnabled = author.isNotEmpty() && description.isNotEmpty()
+        val author: String = authorField.text.toString().trim()
+        val description: String = descField.text.toString().trim()
+        val status: String = autoCompleteTextView.text.toString()
+        btnSave.isEnabled = author.isNotEmpty() && description.isNotEmpty() && status.isNotEmpty()
     }
 
     override fun onBackPressed() {
@@ -56,10 +66,11 @@ class AddLogActivity : AppCompatActivity(), AddLogWatcher {
     private fun save() {
         val author = authorField.text.toString().trim()
         val description = descField.text.toString().trim()
-
+        val status = autoCompleteTextView.text.toString()
         val data = Intent()
         data.putExtra("AUTHOR", author)
         data.putExtra("DESC", description)
+        data.putExtra("STATUS", status)
         setResult(Activity.RESULT_OK, data)
         finish()
     }
