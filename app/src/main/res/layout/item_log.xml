@@ -69,6 +69,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:padding="1.5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="Description goes here"
                     android:textSize="16sp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>

@@ -174,14 +174,13 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 if (searchText.isNotBlank()) {
                     newLogList.forEach {
                         val itemAuthor = it.author.toLowerCase(Locale.getDefault())
-                        val itemDesc = it.status.toLowerCase(Locale.getDefault())
+                        val itemDesc = it.description.toLowerCase(Locale.getDefault())
+                        val itemStatus = it.status.toLowerCase(Locale.getDefault())
 
-                        val queryFound: Boolean =
-                            itemAuthor.contains(searchText) || itemDesc.contains(searchText)
+                        val queryFound: Boolean = itemAuthor.contains(searchText) ||
+                                itemDesc.contains(searchText) || itemStatus.contains(searchText)
 
-                        if (queryFound) {
-                            tempLogList.add(it)
-                        }
+                        if (queryFound) { tempLogList.add(it) }
                     }
 
                     mRecyclerView.adapter?.notifyDataSetChanged()
