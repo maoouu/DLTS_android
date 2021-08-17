@@ -19,8 +19,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dtls_android.databinding.ActivityDashboardBinding
+import com.example.dtls_android.resources.MyResources
 import com.example.dtls_android.session.LoginPref
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -30,12 +32,13 @@ import java.util.*
 class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var id = 0
-
     private lateinit var binding: ActivityDashboardBinding
 
+    // Data Structure
     private lateinit var newLogList: ArrayList<Log>
     private lateinit var tempLogList: ArrayList<Log>
 
+    // RecyclerView
     private lateinit var adapter: LogAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var mRecyclerView: RecyclerView
@@ -44,44 +47,14 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private lateinit var addButton: FloatingActionButton
     private lateinit var textNoTask: TextView
     private lateinit var resultContract: ActivityResultLauncher<Intent>
+    private lateinit var itemDecor: DividerItemDecoration
 
+    // Navigation Header
     private lateinit var mheaderView: View
     private lateinit var mheaderUsername: TextView
     private lateinit var mheaderDesc: TextView
 
     lateinit var session: LoginPref
-
-    private val sampleAuthor: Array<String> = arrayOf(
-        "Corey",
-        "Alvin",
-        "Jake",
-        "Bob",
-        "John Doe",
-    )
-
-    private val sampleStatus: Array<String> = arrayOf(
-        "Approved",
-        "Pending",
-        "Acknowledged",
-        "Denied",
-        "Recommended to the President",
-    )
-
-    private val sampleDate: Array<LocalDateTime> = arrayOf(
-        LocalDateTime.of(2020, 7, 15, 10, 30),
-        LocalDateTime.of(2020, 8, 1, 12, 25),
-        LocalDateTime.of(2020, 11, 23, 16, 6),
-        LocalDateTime.of(2020, 12, 30, 13, 1),
-        LocalDateTime.of(2020, 10, 30, 12, 5)
-    )
-
-    private val sampleDesc: Array<String> = arrayOf(
-        "Awaiting Request",
-        "Info on Project",
-        "Hello World!",
-        "Travel Budget",
-        "Request to Promote",
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,16 +66,17 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         session = LoginPref(this)
         session.checkLogin()
 
+        // Initiate Main Content
         addButton = findViewById(R.id.fab)
         textNoTask = findViewById(R.id.textNoTask)
         mRecyclerView = findViewById(R.id.recyclerView)
+
+        // Initiate Navigation View
         mNavigationView = findViewById(R.id.nav_view)
         mDrawerLayout = findViewById(R.id.drawer_layout)
-
         mheaderView = mNavigationView.getHeaderView(0)
         mheaderUsername = mheaderView.findViewById(R.id.nav_header_username)
         mheaderDesc = mheaderView.findViewById(R.id.nav_header_desc)
-
         mheaderUsername.text = session.getUserDetails()
         mheaderDesc.text = "Hello World!~"
 
@@ -116,13 +90,18 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         layoutManager.stackFromEnd = true
 
+        // initialize data structures
         newLogList = arrayListOf()
         tempLogList = arrayListOf()
         getSampleData()
 
+        // setup recyclerview adapter
+        itemDecor = DividerItemDecoration(this, layoutManager.orientation)
         mRecyclerView.layoutManager = layoutManager
         mRecyclerView.adapter = adapter
+        mRecyclerView.addItemDecoration(itemDecor)
 
+        // handle activity result
         resultContract = registerForActivityResult(ActivityResultContracts
             .StartActivityForResult()) { result: ActivityResult? ->
             if (result?.resultCode == RESULT_OK) {
@@ -147,10 +126,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
         })
 
-        addButton.setOnClickListener {
-            val intent = Intent(this, AddLogActivity::class.java)
-            resultContract.launch(intent)
-        }
+        addButton.setOnClickListener { redirectToAddLog() }
 
     }
 
@@ -235,14 +211,15 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private fun getSampleData() {
         // Remove empty text upon generating sample data
         textNoTask.visibility = View.GONE
+        val sample = MyResources
 
-        for (item in sampleAuthor.indices) {
+        for (item in sample.author.indices) {
             val sampleData = Log(
                 id++,
-                sampleAuthor[item],
-                sampleStatus[item],
-                sampleDate[item],
-                sampleDesc[item]
+                sample.author[item],
+                sample.status[item],
+                sample.date[item],
+                sample.description[item]
             )
             newLogList.add(sampleData)
         }
@@ -253,6 +230,11 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private fun checkIsEmpty(logList: ArrayList<Log>) {
         textNoTask.visibility = if (logList.size > 0) View.GONE else View.VISIBLE
+    }
+
+    private fun redirectToAddLog() {
+        val intent = Intent(this, AddLogActivity::class.java)
+        resultContract.launch(intent)
     }
 
     private fun setupToolbar() {

@@ -57,13 +57,10 @@ class LogAdapter(private val tempLogList: ArrayList<Log>, private val newLogList
                 .setTextColor(ContextCompat.getColor(itemView.context, it)) }
 
             setOnClickListener {
-                //TODO: view the card
-                toastShort(itemView,"Item clicked!")
                 viewCard(itemView, tempLogList[adapterPosition])
             }
 
             setOnLongClickListener {
-                //TODO: pop-up menu for edit and delete
                 popupMenu(adapterPosition, itemView, it)
                 return@setOnLongClickListener true
             }
@@ -78,14 +75,10 @@ class LogAdapter(private val tempLogList: ArrayList<Log>, private val newLogList
         options.setOnMenuItemClickListener {
             when(it.itemId) {
                 R.id.editCard -> {
-                    //TODO: edit prompt
-                    toastShort(itemView,"Edit Button is clicked")
                     editCard(itemView, tempLogData, newLogData)
                     true
                 }
                 R.id.deleteCard -> {
-                    //TODO: delete prompt
-                    toastShort(itemView,"Delete Button is clicked")
                     deleteCard(itemView, tempLogList, newLogList, adapterPosition)
                     true
                 }
@@ -106,7 +99,7 @@ class LogAdapter(private val tempLogList: ArrayList<Log>, private val newLogList
         val author: TextView = card.findViewById(R.id.viewCardAuthor)
         val description: TextView = card.findViewById(R.id.viewCardDesc)
         val date: TextView = card.findViewById(R.id.viewCardDate)
-        val statusOutline: LinearLayout = card.findViewById(R.id.viewCardStatusOutline)
+        //val statusOutline: LinearLayout = card.findViewById(R.id.viewCardStatusOutline)
         val statusCircle: ImageView = card.findViewById(R.id.viewCardStatusCircle)
         val statusText: TextView = card.findViewById(R.id.viewCardStatusText)
 
@@ -119,7 +112,7 @@ class LogAdapter(private val tempLogList: ArrayList<Log>, private val newLogList
         statusText.text = position.status
         date.text = view.context.getString(R.string.viewDateTextString, formattedDate)
 
-        style.outline[position.status]?.let { statusOutline.setBackgroundResource(it) }
+        //style.outline[position.status]?.let { statusOutline.setBackgroundResource(it) }
         style.indicator[position.status]?.let { statusCircle.setImageResource(it) }
         style.color[position.status]?.let { statusText.setTextColor(
             ContextCompat.getColor(view.context, it)

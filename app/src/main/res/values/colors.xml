@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="light_grey">#E2E4E4</color>
+    <color name="light_grey">#D9D9D9</color>
+    <color name="light_grey2">#E2E4E4</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -13,11 +14,11 @@
     <color name="dark_maroon">#800000</color>
 
     <!-- Status Indicator Colors -->
-    <color name="approved">#8ECA68</color>
-    <color name="pending">#CABA68</color>
-    <color name="recommended">#1F44FF</color>
-    <color name="denied">#C83B31</color>
-    <color name="endorsed">#C459DC</color>
-    <color name="returned">#60B8B5</color>
-    <color name="acknowledged">#6C6C6C</color>
+    <color name="approved">#008037</color>
+    <color name="pending">#FF914D</color>
+    <color name="recommended">#0A27AD</color>
+    <color name="denied">#AB0000</color>
+    <color name="endorsed">#923AA6</color>
+    <color name="returned">#109894</color>
+    <color name="acknowledged">#737373</color>
 </resources>

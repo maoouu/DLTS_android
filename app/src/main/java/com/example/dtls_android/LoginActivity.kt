@@ -3,11 +3,8 @@ package com.example.dtls_android
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -16,7 +13,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.dtls_android.account.AccountManager
 import com.example.dtls_android.session.LoginPref
-import kotlin.system.exitProcess
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var usernameField: EditText
@@ -31,24 +27,12 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
 
         accountManager = AccountManager()
         session = LoginPref(this)
         // check if user is already logged in
         if (session.isLoggedIn()) {
-            val intent = Intent(applicationContext, DashboardActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-            finish()
+            redirectToDash()
         }
 
         usernameField = findViewById(R.id.usernameLoginField)
@@ -72,20 +56,13 @@ class LoginActivity : AppCompatActivity() {
         val passwordInput = passwordField.text.toString().trim()
 
         if (usernameInput.isBlank() || passwordInput.isBlank()) {
-            usernameField.setText("")
-            passwordField.setText("")
-            Toast.makeText(this, "Please enter your username and password.", Toast.LENGTH_LONG).show()
+            promptError("Please enter your username and password.")
         } else if (accountManager.verify(usernameInput, passwordInput)) {
             session.createLoginSession(usernameInput)
-            // Start Activity
-            val intent = Intent(applicationContext, DashboardActivity::class.java)
             Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-            startActivity(intent)
-            finish()
+            redirectToDash()
         } else {
-            usernameField.setText("")
-            passwordField.setText("")
-            Toast.makeText(this, "Invalid login, please try again", Toast.LENGTH_SHORT).show()
+            promptError("Invalid login, please try again.")
         }
     }
 
@@ -121,5 +98,18 @@ class LoginActivity : AppCompatActivity() {
             }
             .create()
             .show()
+    }
+
+    private fun redirectToDash() {
+        val intent = Intent(applicationContext, DashboardActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+        finish()
+    }
+
+    private fun promptError(str: String) {
+        usernameField.setText("")
+        passwordField.setText("")
+        Toast.makeText(this, str, Toast.LENGTH_SHORT).show()
     }
 }
