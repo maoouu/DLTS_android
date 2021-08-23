@@ -23,9 +23,12 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dtls_android.databinding.ActivityDashboardBinding
 import com.example.dtls_android.resources.MyResources
+import com.example.dtls_android.service.RetrofitClient
 import com.example.dtls_android.session.LoginPref
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.internal.schedulers.IoScheduler
 import java.time.LocalDateTime
 import java.util.*
 
@@ -37,11 +40,13 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     // Data Structure
     private lateinit var newLogList: ArrayList<Log>
     private lateinit var tempLogList: ArrayList<Log>
+    //private lateinit var recordsList: List<RecordsResponseItem>
 
     // RecyclerView
     private lateinit var adapter: LogAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var mRecyclerView: RecyclerView
+    //private lateinit var mEmptyRecyclerView: EmptyRecyclerView
     private lateinit var mNavigationView: NavigationView
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var addButton: FloatingActionButton
@@ -62,74 +67,31 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         val view = binding.root
         setContentView(view)
         setupToolbar()
-
         session = LoginPref(this)
         session.checkLogin()
 
-        // Initiate Main Content
-        addButton = findViewById(R.id.fab)
-        textNoTask = findViewById(R.id.textNoTask)
-        mRecyclerView = findViewById(R.id.recyclerView)
-
-        // Initiate Navigation View
-        mNavigationView = findViewById(R.id.nav_view)
-        mDrawerLayout = findViewById(R.id.drawer_layout)
-        mheaderView = mNavigationView.getHeaderView(0)
-        mheaderUsername = mheaderView.findViewById(R.id.nav_header_username)
-        mheaderDesc = mheaderView.findViewById(R.id.nav_header_desc)
-        mheaderUsername.text = session.getUserDetails()
-        mheaderDesc.text = "Hello World!~"
-
-        val toggle = ActionBarDrawerToggle(
-            this, mDrawerLayout, binding.toolbar, 0, 0
-        )
-        mDrawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-        mNavigationView.setNavigationItemSelectedListener(this)
-
-        layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
-        layoutManager.stackFromEnd = true
-
+        textNoTask.visibility = View.GONE
+        loadContent()
         // initialize data structures
-        newLogList = arrayListOf()
-        tempLogList = arrayListOf()
-        getSampleData()
-
-        // setup recyclerview adapter
-        itemDecor = DividerItemDecoration(this, layoutManager.orientation)
-        mRecyclerView.layoutManager = layoutManager
-        mRecyclerView.adapter = adapter
-        mRecyclerView.addItemDecoration(itemDecor)
+        //newLogList = arrayListOf()
+        //tempLogList = arrayListOf()
+        //getSampleData()
 
         // handle activity result
-        resultContract = registerForActivityResult(ActivityResultContracts
-            .StartActivityForResult()) { result: ActivityResult? ->
-            if (result?.resultCode == RESULT_OK) {
-                val newLog = Log(
-                    id++,
-                    result.data?.getStringExtra("AUTHOR").toString(),
-                    result.data?.getStringExtra("STATUS").toString(),
-                    LocalDateTime.now(),
-                    result.data?.getStringExtra("DESC").toString(),
-                )
-                newLogList.add(newLog)
-                tempLogList.add(newLog)
-                mRecyclerView.adapter?.notifyDataSetChanged()
-                Toast.makeText(this, "A new entry has been added", Toast.LENGTH_SHORT).show()
-            }
-        }
+        //establishResultContract()
 
+        /**
         adapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
                 super.onChanged()
                 checkIsEmpty(tempLogList)
             }
         })
+        **/
 
-        addButton.setOnClickListener { redirectToAddLog() }
+        //addButton.setOnClickListener { redirectToAddLog() }
 
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
@@ -189,6 +151,113 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         return true
     }
 
+    private fun initializeApi() {
+        val recordsAPI = RetrofitClient.webservice
+        val response = recordsAPI.getRecordsList()
+        //val disposable = CompositeDisposable()
+        //val task = response.observeOn(AndroidSchedulers.mainThread()).subscribeOn(IoScheduler()).subscribe {
+        //    mRecyclerView.adapter = DataAdapter(this, it)
+        //}
+
+        response.observeOn(AndroidSchedulers.mainThread()).subscribeOn(IoScheduler()).subscribe {
+            mRecyclerView.adapter = DataAdapter(this, it)
+            //mEmptyRecyclerView.adapter = DataAdapter(this, it)
+        }
+        mRecyclerView.adapter?.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+
+            override fun onChanged() {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+        })
+        //disposable.add(task)
+        //disposable.clear()
+    }
+
+    private fun loadContent() {
+        // Initiate Main Content
+        addButton = findViewById(R.id.fab)
+        textNoTask = findViewById(R.id.textNoTask)
+        mRecyclerView = findViewById(R.id.recyclerView)
+
+        loadNavigationView()
+    }
+
+    private fun loadNavigationView() {
+        // Initiate Navigation View
+        mNavigationView = findViewById(R.id.nav_view)
+        mDrawerLayout = findViewById(R.id.drawer_layout)
+        mheaderView = mNavigationView.getHeaderView(0)
+        mheaderUsername = mheaderView.findViewById(R.id.nav_header_username)
+        mheaderDesc = mheaderView.findViewById(R.id.nav_header_desc)
+        mheaderUsername.text = session.getUserDetails()
+        mheaderDesc.text = "Hello World!~"
+
+        val toggle = ActionBarDrawerToggle(
+            this,
+            mDrawerLayout,
+            binding.toolbar,
+            0,
+            0
+        )
+        mDrawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+        mNavigationView.setNavigationItemSelectedListener(this)
+
+        loadRecyclerView()
+    }
+
+    private fun loadRecyclerView() {
+        layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
+        layoutManager.stackFromEnd = true
+        // setup recyclerview adapter
+        itemDecor = DividerItemDecoration(this, layoutManager.orientation)
+        mRecyclerView.layoutManager = layoutManager
+        mRecyclerView.addItemDecoration(itemDecor)
+        //mRecyclerView.adapter = adapter
+        //mEmptyRecyclerView.layoutManager = layoutManager
+        //mEmptyRecyclerView.addItemDecoration(itemDecor)
+        //mEmptyRecyclerView.setEmptyView(textNoTask)
+        initializeApi()
+    }
+
+    private fun establishResultContract() {
+        resultContract = registerForActivityResult(ActivityResultContracts
+            .StartActivityForResult()) { result: ActivityResult? ->
+            if (result?.resultCode == RESULT_OK) {
+                val newLog = Log(
+                    id++,
+                    result.data?.getStringExtra("AUTHOR").toString(),
+                    result.data?.getStringExtra("STATUS").toString(),
+                    LocalDateTime.now(),
+                    result.data?.getStringExtra("DESC").toString(),
+                )
+                newLogList.add(newLog)
+                tempLogList.add(newLog)
+                mRecyclerView.adapter?.notifyDataSetChanged()
+                Toast.makeText(this, "A new entry has been added", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun confirmLogout() {
         AlertDialog.Builder(this)
             .setTitle("Confirm")
@@ -228,8 +297,8 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         adapter = LogAdapter(tempLogList, newLogList)
     }
 
-    private fun checkIsEmpty(logList: ArrayList<Log>) {
-        textNoTask.visibility = if (logList.size > 0) View.GONE else View.VISIBLE
+    private fun checkIsEmpty(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>?) {
+        textNoTask.visibility = if (adapter?.itemCount!! > 0) View.GONE else View.VISIBLE
     }
 
     private fun redirectToAddLog() {
