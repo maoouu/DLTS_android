@@ -46,7 +46,6 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private lateinit var adapter: LogAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var mRecyclerView: RecyclerView
-    //private lateinit var mEmptyRecyclerView: EmptyRecyclerView
     private lateinit var mNavigationView: NavigationView
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var addButton: FloatingActionButton
@@ -70,7 +69,6 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         session = LoginPref(this)
         session.checkLogin()
 
-        textNoTask.visibility = View.GONE
         loadContent()
         // initialize data structures
         //newLogList = arrayListOf()
@@ -80,116 +78,8 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         // handle activity result
         //establishResultContract()
 
-        /**
-        adapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
-            override fun onChanged() {
-                super.onChanged()
-                checkIsEmpty(tempLogList)
-            }
-        })
-        **/
-
         //addButton.setOnClickListener { redirectToAddLog() }
 
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.search_menu, menu)
-        val search = menu?.findItem(R.id.action_search)
-        val searchView = search?.actionView as SearchView
-
-        searchView.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
-        searchView.queryHint = "Search"
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                tempLogList.clear()
-                val searchText = newText!!.toLowerCase(Locale.getDefault()).trim()
-
-                if (searchText.isNotBlank()) {
-                    newLogList.forEach {
-                        val itemAuthor = it.author.toLowerCase(Locale.getDefault())
-                        val itemDesc = it.description.toLowerCase(Locale.getDefault())
-                        val itemStatus = it.status.toLowerCase(Locale.getDefault())
-
-                        val queryFound: Boolean = itemAuthor.contains(searchText) ||
-                                itemDesc.contains(searchText) || itemStatus.contains(searchText)
-
-                        if (queryFound) { tempLogList.add(it) }
-                    }
-
-                    mRecyclerView.adapter?.notifyDataSetChanged()
-                } else {
-                    tempLogList.addAll(newLogList)
-                    mRecyclerView.adapter?.notifyDataSetChanged()
-                }
-
-                return true
-            }
-        })
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.nav_menu_profile -> {
-                Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_menu_settings -> {
-                Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_menu_logout -> {
-                confirmLogout()
-            }
-        }
-
-        mDrawerLayout.closeDrawer(GravityCompat.START)
-        return true
-    }
-
-    private fun initializeApi() {
-        val recordsAPI = RetrofitClient.webservice
-        val response = recordsAPI.getRecordsList()
-        //val disposable = CompositeDisposable()
-        //val task = response.observeOn(AndroidSchedulers.mainThread()).subscribeOn(IoScheduler()).subscribe {
-        //    mRecyclerView.adapter = DataAdapter(this, it)
-        //}
-
-        response.observeOn(AndroidSchedulers.mainThread()).subscribeOn(IoScheduler()).subscribe {
-            mRecyclerView.adapter = DataAdapter(this, it)
-            //mEmptyRecyclerView.adapter = DataAdapter(this, it)
-        }
-        mRecyclerView.adapter?.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                checkIsEmpty(mRecyclerView.adapter)
-            }
-
-            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
-                checkIsEmpty(mRecyclerView.adapter)
-            }
-
-            override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
-                checkIsEmpty(mRecyclerView.adapter)
-            }
-
-            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                checkIsEmpty(mRecyclerView.adapter)
-            }
-
-            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-                checkIsEmpty(mRecyclerView.adapter)
-            }
-
-            override fun onChanged() {
-                checkIsEmpty(mRecyclerView.adapter)
-            }
-        })
-        //disposable.add(task)
-        //disposable.clear()
     }
 
     private fun loadContent() {
@@ -197,7 +87,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         addButton = findViewById(R.id.fab)
         textNoTask = findViewById(R.id.textNoTask)
         mRecyclerView = findViewById(R.id.recyclerView)
-
+        textNoTask.visibility = View.GONE
         loadNavigationView()
     }
 
@@ -232,11 +122,41 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         itemDecor = DividerItemDecoration(this, layoutManager.orientation)
         mRecyclerView.layoutManager = layoutManager
         mRecyclerView.addItemDecoration(itemDecor)
-        //mRecyclerView.adapter = adapter
-        //mEmptyRecyclerView.layoutManager = layoutManager
-        //mEmptyRecyclerView.addItemDecoration(itemDecor)
-        //mEmptyRecyclerView.setEmptyView(textNoTask)
         initializeApi()
+    }
+
+    private fun initializeApi() {
+        val recordsAPI = RetrofitClient.webservice
+        val response = recordsAPI.getRecordsList()
+        response.observeOn(AndroidSchedulers.mainThread()).subscribeOn(IoScheduler()).subscribe {
+            mRecyclerView.adapter = DataAdapter(this, it)
+            //mEmptyRecyclerView.adapter = DataAdapter(this, it)
+        }
+        mRecyclerView.adapter?.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+
+            override fun onChanged() {
+                checkIsEmpty(mRecyclerView.adapter)
+            }
+        })
     }
 
     private fun establishResultContract() {
@@ -308,5 +228,63 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+        val search = menu?.findItem(R.id.action_search)
+        val searchView = search?.actionView as SearchView
+
+        searchView.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+        searchView.queryHint = "Search"
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                tempLogList.clear()
+                val searchText = newText!!.toLowerCase(Locale.getDefault()).trim()
+
+                if (searchText.isNotBlank()) {
+                    newLogList.forEach {
+                        val itemAuthor = it.author.toLowerCase(Locale.getDefault())
+                        val itemDesc = it.description.toLowerCase(Locale.getDefault())
+                        val itemStatus = it.status.toLowerCase(Locale.getDefault())
+
+                        val queryFound: Boolean = itemAuthor.contains(searchText) ||
+                                itemDesc.contains(searchText) || itemStatus.contains(searchText)
+
+                        if (queryFound) { tempLogList.add(it) }
+                    }
+
+                    mRecyclerView.adapter?.notifyDataSetChanged()
+                } else {
+                    tempLogList.addAll(newLogList)
+                    mRecyclerView.adapter?.notifyDataSetChanged()
+                }
+
+                return true
+            }
+        })
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_menu_profile -> {
+                Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show()
+            }
+            R.id.nav_menu_settings -> {
+                Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show()
+            }
+            R.id.nav_menu_logout -> {
+                confirmLogout()
+            }
+        }
+
+        mDrawerLayout.closeDrawer(GravityCompat.START)
+        return true
     }
 }
