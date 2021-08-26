@@ -3,7 +3,7 @@ package com.example.dtls_android.session
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import com.example.dtls_android.LoginActivity
+import com.example.dtls_android.ui.LoginActivity
 
 class LoginPref {
 

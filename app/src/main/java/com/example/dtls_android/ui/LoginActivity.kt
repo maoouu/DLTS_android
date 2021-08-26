@@ -1,4 +1,4 @@
-package com.example.dtls_android
+package com.example.dtls_android.ui
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.dtls_android.R
 import com.example.dtls_android.account.AccountManager
 import com.example.dtls_android.session.LoginPref
 

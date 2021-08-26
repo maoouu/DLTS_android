@@ -1,4 +1,4 @@
-package com.example.dtls_android
+package com.example.dtls_android.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import com.example.dtls_android.R
 import com.google.android.material.textfield.TextInputEditText
 
 interface AddLogWatcher: TextWatcher {

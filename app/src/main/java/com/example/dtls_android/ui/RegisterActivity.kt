@@ -1,4 +1,4 @@
-package com.example.dtls_android
+package com.example.dtls_android.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -11,6 +11,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.Toast
+import com.example.dtls_android.R
 import com.example.dtls_android.account.AccountManager
 import com.google.android.material.textfield.TextInputEditText
 

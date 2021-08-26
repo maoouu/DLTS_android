@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="20dp"
     android:background="@color/light_grey"
-    tools:context=".AddLogActivity">
+    tools:context=".ui.AddLogActivity">
 
     <TextView
         android:id="@+id/textAddLog"

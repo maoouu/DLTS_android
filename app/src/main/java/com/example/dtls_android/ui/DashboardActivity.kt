@@ -1,4 +1,4 @@
-package com.example.dtls_android
+package com.example.dtls_android.ui
 
 import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +21,10 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dtls_android.DataAdapter
+import com.example.dtls_android.Log
+import com.example.dtls_android.LogAdapter
+import com.example.dtls_android.R
 import com.example.dtls_android.databinding.ActivityDashboardBinding
 import com.example.dtls_android.resources.MyResources
 import com.example.dtls_android.service.RetrofitClient
