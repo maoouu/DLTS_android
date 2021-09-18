@@ -7,9 +7,11 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlin.collections.ArrayList
 import android.content.Intent
+import android.graphics.DiscretePathEffect
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -19,20 +21,32 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dtls_android.DataAdapter
 import com.example.dtls_android.Log
 import com.example.dtls_android.LogAdapter
 import com.example.dtls_android.R
+import com.example.dtls_android.ViewModel.DashboardActivityViewModel
 import com.example.dtls_android.databinding.ActivityDashboardBinding
+import com.example.dtls_android.databinding.ContentMainBinding
 import com.example.dtls_android.resources.MyResources
 import com.example.dtls_android.service.RetrofitClient
+import com.example.dtls_android.service.response.RecordsList
 import com.example.dtls_android.session.LoginPref
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.internal.schedulers.IoScheduler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+//import kotlinx.serialization.ExperimentalSerializationApi
+import retrofit2.awaitResponse
+import java.lang.Exception
+//import io.reactivex.android.schedulers.AndroidSchedulers
+//import io.reactivex.internal.schedulers.IoScheduler
 import java.time.LocalDateTime
 import java.util.*
 
@@ -44,18 +58,20 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     // Data Structure
     private lateinit var newLogList: ArrayList<Log>
     private lateinit var tempLogList: ArrayList<Log>
-    //private lateinit var recordsList: List<RecordsResponseItem>
 
     // RecyclerView
+    private lateinit var recyclerViewAdapter: DataAdapter
+    private lateinit var viewModel: DashboardActivityViewModel
+    private lateinit var rvProgressBar: ProgressBar
     private lateinit var adapter: LogAdapter
-    private lateinit var layoutManager: LinearLayoutManager
+    //private lateinit var layoutManager: LinearLayoutManager
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mNavigationView: NavigationView
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var addButton: FloatingActionButton
     private lateinit var textNoTask: TextView
     private lateinit var resultContract: ActivityResultLauncher<Intent>
-    private lateinit var itemDecor: DividerItemDecoration
+    //private lateinit var itemDecor: DividerItemDecoration
 
     // Navigation Header
     private lateinit var mheaderView: View
@@ -74,6 +90,10 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         session.checkLogin()
 
         loadContent()
+        loadNavigationView()
+        loadRecyclerView()
+        initViewModel()
+
         // initialize data structures
         //newLogList = arrayListOf()
         //tempLogList = arrayListOf()
@@ -82,7 +102,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         // handle activity result
         //establishResultContract()
 
-        //addButton.setOnClickListener { redirectToAddLog() }
+        addButton.setOnClickListener { redirectToAdd() }
 
     }
 
@@ -91,8 +111,8 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         addButton = findViewById(R.id.fab)
         textNoTask = findViewById(R.id.textNoTask)
         mRecyclerView = findViewById(R.id.recyclerView)
+        rvProgressBar = findViewById(R.id.rvProgressBar)
         textNoTask.visibility = View.GONE
-        loadNavigationView()
     }
 
     private fun loadNavigationView() {
@@ -115,52 +135,39 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         mDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         mNavigationView.setNavigationItemSelectedListener(this)
-
-        loadRecyclerView()
     }
 
     private fun loadRecyclerView() {
-        layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
-        layoutManager.stackFromEnd = true
+        val linear = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
+        linear.stackFromEnd = true
+        val rvBinding: RecyclerView = findViewById(R.id.recyclerView)
+        rvBinding.apply {
+            layoutManager = linear
+            val decoration = DividerItemDecoration(this@DashboardActivity, DividerItemDecoration.VERTICAL)
+            addItemDecoration(decoration)
+            recyclerViewAdapter = DataAdapter()
+            adapter = recyclerViewAdapter
+        }
         // setup recyclerview adapter
-        itemDecor = DividerItemDecoration(this, layoutManager.orientation)
-        mRecyclerView.layoutManager = layoutManager
-        mRecyclerView.addItemDecoration(itemDecor)
-        initializeApi()
+        //itemDecor = DividerItemDecoration(this, layoutManager.orientation)
+        //mRecyclerView.layoutManager = layoutManager
+        //mRecyclerView.addItemDecoration(itemDecor)
+        //initializeApi()
     }
 
-    private fun initializeApi() {
-        val recordsAPI = RetrofitClient.webservice
-        val response = recordsAPI.getRecordsList()
-        response.observeOn(AndroidSchedulers.mainThread()).subscribeOn(IoScheduler()).subscribe {
-            mRecyclerView.adapter = DataAdapter(this, it)
-            //mEmptyRecyclerView.adapter = DataAdapter(this, it)
-        }
-        mRecyclerView.adapter?.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                checkIsEmpty(mRecyclerView.adapter)
-            }
-
-            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
-                checkIsEmpty(mRecyclerView.adapter)
-            }
-
-            override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
-                checkIsEmpty(mRecyclerView.adapter)
-            }
-
-            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                checkIsEmpty(mRecyclerView.adapter)
-            }
-
-            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-                checkIsEmpty(mRecyclerView.adapter)
-            }
-
-            override fun onChanged() {
-                checkIsEmpty(mRecyclerView.adapter)
+    private fun initViewModel() {
+        rvProgressBar.visibility = View.VISIBLE
+        viewModel = ViewModelProvider(this).get(DashboardActivityViewModel::class.java)
+        viewModel.getRecordListObservable().observe(this, {
+            if (it == null) {
+                Toast.makeText(this@DashboardActivity, "No results found", Toast.LENGTH_LONG).show()
+            } else {
+                recyclerViewAdapter.recordsList = it.toMutableList()
+                recyclerViewAdapter.notifyDataSetChanged()
             }
         })
+        viewModel.getRecordList()
+        rvProgressBar.visibility = View.GONE
     }
 
     private fun establishResultContract() {
@@ -201,6 +208,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             .show()
     }
 
+    /**
     private fun getSampleData() {
         // Remove empty text upon generating sample data
         textNoTask.visibility = View.GONE
@@ -220,12 +228,13 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         tempLogList.addAll(newLogList)
         adapter = LogAdapter(tempLogList, newLogList)
     }
+    **/
 
     private fun checkIsEmpty(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>?) {
         textNoTask.visibility = if (adapter?.itemCount!! > 0) View.GONE else View.VISIBLE
     }
 
-    private fun redirectToAddLog() {
+    private fun redirectToAdd() {
         val intent = Intent(this, AddLogActivity::class.java)
         resultContract.launch(intent)
     }

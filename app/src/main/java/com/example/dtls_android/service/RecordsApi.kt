@@ -1,8 +1,10 @@
 package com.example.dtls_android.service
 
-import com.example.dtls_android.service.response.RecordsResponse
-import retrofit2.http.GET
-import io.reactivex.Observable
+import com.example.dtls_android.service.response.Record
+import com.example.dtls_android.service.response.RecordResponse
+import com.example.dtls_android.service.response.RecordsList
+import retrofit2.Call
+import retrofit2.http.*
 
 interface RecordsApi {
 
@@ -18,5 +20,22 @@ interface RecordsApi {
     **/
 
     @GET("api/records/")
-    fun getRecordsList(): Observable<List<RecordsResponse>>
+    @Headers("Accept:application/json", "Content-Type:application/json")
+    //fun getRecordsList(): Call<RecordsList>
+    fun getRecordsList(): Call<List<Record>>
+
+    @POST("api/records/")
+    @Headers("Accept:application/json", "Content-Type:application/json")
+    fun createRecord(@Body params: Record): Call<RecordResponse>
+
+    @PATCH("api/records/{id}")
+    @Headers("Accept:application/json", "Content-Type:application/json")
+    fun updateRecord(@Path("id") id: String, @Body params: Record): Call<RecordResponse>
+
+    @DELETE("api/records/{id}")
+    @Headers("Accept:application/json", "Content-Type:application/json")
+    fun deleteRecord(@Path("id")id: String): Call<RecordResponse>
+
+    // TODO: Handle HTTP GET, POST, PATCH, DELETE
+    // https://www.youtube.com/watch?v=TJpk7ezvtGo
 }

@@ -6,7 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.dtls_android.R
 import com.example.dtls_android.resources.MyResources
-import com.example.dtls_android.service.response.RecordsResponse
+import com.example.dtls_android.service.response.Record
 
 class ViewCard {
     private var viewAuthor: TextView
@@ -26,8 +26,8 @@ class ViewCard {
         viewStatusText = card.findViewById(R.id.viewCardStatusText)
     }
 
-    fun setCardValues(record: RecordsResponse): ViewCard {
-        val formattedDate = CardUtils.getFormattedDate(record.dateModified, "L/dd/yy")
+    fun setCardValues(record: Record): ViewCard {
+        val formattedDate = CardUtils.getFormattedDate(record.dateModified!!, "L/dd/yy")
         viewAuthor.text = record.author
         viewDesc.text = record.description
         viewDate.text = context.getString(R.string.viewDateTextString, formattedDate)

@@ -1,6 +1,8 @@
 package com.example.dtls_android.card
 
 import android.content.Context
+import android.graphics.Color
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -14,14 +16,14 @@ class CardUtils {
     companion object {
         val style = MyResources
 
-        fun getFormattedDate(date: CharSequence, pattern: String): String {
+        fun getFormattedDate(date: String, pattern: String): String {
             val from = LocalDate.parse(date)
             val formatter = DateTimeFormatter.ofPattern(pattern)
 
             return from.format(formatter)
         }
 
-        fun getFormattedDate(date: CharSequence): String {
+        fun getFormattedDate(date: String): String {
             val from = LocalDate.parse(date)
             val now = LocalDate.now()
             val pattern = formatBasedOnDifference(from, now)
