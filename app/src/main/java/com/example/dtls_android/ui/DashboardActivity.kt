@@ -160,21 +160,23 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         searchView.queryHint = "Search"
 
         initSearch()
-
         return super.onCreateOptionsMenu(menu)
     }
 
     private fun initSearch() {
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                val searchString = newText!!.toLowerCase(Locale.getDefault()).trim()
+                val searchString = query!!.toLowerCase(Locale.getDefault()).trim()
                 if (searchString.isNotBlank()) {
                     viewModel.searchRecord(searchString)
                 } else {
+                    viewModel.getRecordList()
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText?.trim()?.isBlank() == true) {
                     viewModel.getRecordList()
                 }
                 return true
