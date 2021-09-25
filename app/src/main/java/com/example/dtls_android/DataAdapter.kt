@@ -3,6 +3,7 @@ package com.example.dtls_android
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +15,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dtls_android.card.CardUtils
 import com.example.dtls_android.card.ViewCard
 import com.example.dtls_android.databinding.ItemLogBinding
+import com.example.dtls_android.service.RetrofitClient
 import com.example.dtls_android.service.response.Record
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class DataAdapter: RecyclerView.Adapter<DataAdapter.ViewHolder>() {
 
@@ -51,11 +56,12 @@ class DataAdapter: RecyclerView.Adapter<DataAdapter.ViewHolder>() {
 
             decorateStatus(this.context, record.status)
             setOnClickListener { viewItem(this, recordsList[adapterPosition]) }
+            /**
             setOnLongClickListener {
-                //TODO: Create pop-up menu for Edit and Delete
                 createPopupMenu(this, it, adapterPosition)
                 return@setOnLongClickListener true
             }
+            **/
         }
 
         private fun viewItem(view: View, record: Record) = with(view) {
@@ -67,89 +73,6 @@ class DataAdapter: RecyclerView.Adapter<DataAdapter.ViewHolder>() {
             val dialogBuilder = prepareDialog(card)
             val dialog = createDialog(dialogBuilder, this)
             dialog.show()
-        }
-
-        private fun createPopupMenu(itemView: View, view: View, adapterPosition: Int) {
-            val popupMenu = PopupMenu(itemView.context, view)
-            popupMenu.inflate(R.menu.card_menu)
-            popupMenu.setOnMenuItemClickListener {
-                when(it.itemId) {
-                    R.id.editCard -> {
-                        editItem(itemView, adapterPosition)
-                        true
-                    }
-                    R.id.deleteCard -> {
-                        deleteItem(itemView, adapterPosition)
-                        true
-                    }
-                    else -> true
-                }
-            }
-            popupMenu.show()
-        }
-
-        private fun editItem(itemView: View, adapterPosition: Int) {
-            val record = recordsList[adapterPosition]
-            val editView = LayoutInflater.from(itemView.context).inflate(R.layout.activity_edit_log, null)
-            setupView(editView, record)
-
-            val dialogBuilder = prepareDialog(editView)
-            val dialog = createEditDialog(editView, dialogBuilder, record)
-        }
-
-        private fun setupView(editView: View, record: Record) {
-            authorEditField = editView.findViewById(R.id.authorInput)
-            descEditField = editView.findViewById(R.id.descriptionInput)
-            val status: Array<String> = editView.resources.getStringArray(R.array.status)
-            val dropdownAdapter = ArrayAdapter(editView.context, R.layout.dropdown_item, status)
-            statusFieldAuto = editView.findViewById(R.id.statusFieldAuto)
-
-            authorEditField.setText(record.author)
-            statusFieldAuto.setText(record.status)
-            descEditField.setText(record.description)
-            statusFieldAuto.setAdapter(dropdownAdapter)
-        }
-
-        private fun deleteItem(itemView: View, adapterPosition: Int) {
-            val dialogBuilder = prepareDialog(itemView)
-            val dialog = createDeleteDialog(itemView, dialogBuilder, adapterPosition)
-            dialog.show()
-        }
-
-        private fun createEditDialog(view:View, viewDialogBuilder: AlertDialog.Builder, record: Record): AlertDialog {
-            val editDialog = viewDialogBuilder.setView(view)
-                .setPositiveButton("Save") {
-                    dialog,_ ->
-                    record.author = authorEditField.text.toString()
-                    //TODO: Let HTTP requests do the work
-                }
-                .setNegativeButton("Cancel") {
-                    dialog,_ -> dialog.dismiss()
-                }
-                .create()
-
-            return editDialog
-        }
-
-        private fun createDeleteDialog(view:View, viewDialogBuilder: AlertDialog.Builder, adapterPosition: Int): AlertDialog {
-            val deleteDialog = viewDialogBuilder
-                .setTitle("Delete")
-                .setIcon(R.drawable.ic_warning)
-                .setMessage ("Are you sure you want to permanently delete this item?")
-                .setPositiveButton("Yes") {
-                    dialog,_->
-                    recordsList.removeAt(adapterPosition)
-                    notifyItemRemoved(adapterPosition)
-                    Toast.makeText(view.context, "Item has been deleted", Toast.LENGTH_SHORT).show()
-                    dialog.dismiss()
-                }
-                .setNegativeButton("No") {
-                    dialog,_->
-                    dialog.dismiss()
-                }
-                .create()
-
-            return deleteDialog
         }
 
         private fun prepareDialog(view: View): AlertDialog.Builder {
@@ -175,5 +98,106 @@ class DataAdapter: RecyclerView.Adapter<DataAdapter.ViewHolder>() {
             CardUtils.setIndicatorColor(status, binding.cardTextIndicator)
             CardUtils.setTextColor(context, status, binding.cardTextStatus)
         }
+
+        /**
+        private fun createPopupMenu(itemView: View, view: View, adapterPosition: Int) {
+        val popupMenu = PopupMenu(itemView.context, view)
+        popupMenu.inflate(R.menu.card_menu)
+        popupMenu.setOnMenuItemClickListener {
+        when(it.itemId) {
+        R.id.editCard -> {
+        editItem(itemView, adapterPosition)
+        true
+        }
+        R.id.deleteCard -> {
+        deleteItem(itemView, adapterPosition)
+        true
+        }
+        else -> true
+        }
+        }
+        popupMenu.show()
+        }
+
+        private fun editItem(itemView: View, adapterPosition: Int) {
+        val record = recordsList[adapterPosition]
+        val editView = LayoutInflater.from(itemView.context).inflate(R.layout.activity_edit_log, null)
+        setupView(editView, record)
+
+        val dialogBuilder = prepareDialog(editView)
+        val dialog = createEditDialog(editView, dialogBuilder, record)
+        dialog.show()
+        }
+
+        private fun setupView(editView: View, record: Record) {
+        authorEditField = editView.findViewById(R.id.authorInput)
+        descEditField = editView.findViewById(R.id.descriptionInput)
+        val status: Array<String> = editView.resources.getStringArray(R.array.status)
+        val dropdownAdapter = ArrayAdapter(editView.context, R.layout.dropdown_item, status)
+        statusFieldAuto = editView.findViewById(R.id.statusFieldAuto)
+
+        authorEditField.setText(record.author)
+        statusFieldAuto.setText(record.status)
+        descEditField.setText(record.description)
+        statusFieldAuto.setAdapter(dropdownAdapter)
+        }
+
+        private fun deleteItem(itemView: View, adapterPosition: Int) {
+        val dialogBuilder = prepareDialog(itemView)
+        val dialog = createDeleteDialog(itemView, dialogBuilder, adapterPosition)
+        dialog.show()
+        }
+
+        private fun createEditDialog(view:View, viewDialogBuilder: AlertDialog.Builder, record: Record): AlertDialog {
+        val editDialog = viewDialogBuilder.setView(view)
+        .setPositiveButton("Save") {
+        dialog,_ ->
+        //record.author = authorEditField.text.toString()
+        //TODO: Let HTTP requests do the work
+        val api = RetrofitClient.webservice
+        val call = api.updateRecord(record.id.toString(), record)
+
+        call.enqueue(object: Callback<Record> {
+        override fun onFailure(call: Call<Record>, t: Throwable) {
+        Log.d(null, "Updating to server failed.")
+        }
+
+        override fun onResponse(call: Call<Record>, response: Response<Record>) {
+        if (response.isSuccessful) {
+        Toast.makeText(view.context, "Item has been updated", Toast.LENGTH_SHORT).show()
+        }
+        }
+        })
+        dialog.dismiss()
+        }
+        .setNegativeButton("Cancel") {
+        dialog,_ -> dialog.dismiss()
+        }
+        .create()
+
+        return editDialog
+        }
+
+        private fun createDeleteDialog(view:View, viewDialogBuilder: AlertDialog.Builder, adapterPosition: Int): AlertDialog {
+        val deleteDialog = viewDialogBuilder
+        .setTitle("Delete")
+        .setIcon(R.drawable.ic_warning)
+        .setMessage ("Are you sure you want to permanently delete this item?")
+        .setPositiveButton("Yes") {
+        dialog,_->
+        recordsList.removeAt(adapterPosition)
+        notifyItemRemoved(adapterPosition)
+        Toast.makeText(view.context, "Item has been deleted", Toast.LENGTH_SHORT).show()
+        dialog.dismiss()
+        }
+        .setNegativeButton("No") {
+        dialog,_->
+        dialog.dismiss()
+        }
+        .create()
+
+        return deleteDialog
+        }
+         **/
     }
 }

@@ -30,7 +30,8 @@ interface RecordsApi {
 
     @PATCH("api/records/{id}")
     @Headers("Accept:application/json", "Content-Type:application/json")
-    fun updateRecord(@Path("id") id: String, @Body params: Record): Call<RecordResponse>
+    //fun updateRecord(@Path("id") id: String, @Body params: Record): Call<RecordResponse>
+    fun updateRecord(@Path("id") id: String, @Body params: Record): Call<Record>
 
     @DELETE("api/records/{id}")
     @Headers("Accept:application/json", "Content-Type:application/json")

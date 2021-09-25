@@ -15,9 +15,7 @@ class RetrofitClient {
 
     companion object {
         val baseURL = "http://10.0.2.2:8000/"
-
         val webservice: RecordsApi by lazy {
-
             val logging = HttpLoggingInterceptor()
             logging.level = (HttpLoggingInterceptor.Level.BODY)
             val client = OkHttpClient.Builder()
@@ -27,7 +25,6 @@ class RetrofitClient {
                 .baseUrl(baseURL)
                 .client(client.build())
                 .addConverterFactory(GsonConverterFactory.create())
-                //.addConverterFactory(Json.asConverterFactory(contentType))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build().create(RecordsApi::class.java)
         }
