@@ -5,50 +5,28 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlin.collections.ArrayList
 import android.content.Intent
-import android.graphics.DiscretePathEffect
-import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dtls_android.DataAdapter
-import com.example.dtls_android.Log
-import com.example.dtls_android.LogAdapter
 import com.example.dtls_android.R
 import com.example.dtls_android.ViewModel.DashboardActivityViewModel
 import com.example.dtls_android.databinding.ActivityDashboardBinding
-import com.example.dtls_android.databinding.ContentMainBinding
-import com.example.dtls_android.resources.MyResources
-import com.example.dtls_android.service.RetrofitClient
-import com.example.dtls_android.service.response.RecordsList
 import com.example.dtls_android.session.LoginPref
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-//import kotlinx.serialization.ExperimentalSerializationApi
-import retrofit2.awaitResponse
-import java.lang.Exception
-//import io.reactivex.android.schedulers.AndroidSchedulers
-//import io.reactivex.internal.schedulers.IoScheduler
-import java.time.LocalDateTime
 import java.util.*
 
 class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -145,7 +123,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private fun redirectToAdd() {
         val intent = Intent(this, AddLogActivity::class.java)
-        resultContract.launch(intent)
+        startActivity(intent)
     }
 
     private fun setupToolbar() {
