@@ -9,6 +9,7 @@ import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
@@ -24,12 +25,14 @@ import com.example.dtls_android.DataAdapter
 import com.example.dtls_android.R
 import com.example.dtls_android.ViewModel.DashboardActivityViewModel
 import com.example.dtls_android.databinding.ActivityDashboardBinding
+import com.example.dtls_android.service.response.Record
 import com.example.dtls_android.session.LoginPref
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import java.util.*
 
-class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListener,
+    NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityDashboardBinding
     private lateinit var recyclerViewAdapter: DataAdapter
@@ -40,7 +43,6 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var addButton: FloatingActionButton
     private lateinit var textNoTask: TextView
-    private lateinit var resultContract: ActivityResultLauncher<Intent>
     private lateinit var searchView: SearchView
     private lateinit var mheaderView: View
     private lateinit var mheaderUsername: TextView
@@ -57,9 +59,11 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         session.checkLogin()
 
         initMain()
+        rvProgressBar.visibility = View.VISIBLE
         initNavigationView()
         initRecyclerView()
         initViewModel()
+        deleteRecordObservable()
 
         addButton.setOnClickListener { redirectToAdd() }
     }
@@ -101,13 +105,12 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             layoutManager = linear
             val decoration = DividerItemDecoration(this@DashboardActivity, DividerItemDecoration.VERTICAL)
             addItemDecoration(decoration)
-            recyclerViewAdapter = DataAdapter()
+            recyclerViewAdapter = DataAdapter(this@DashboardActivity)
             adapter = recyclerViewAdapter
         }
     }
 
     private fun initViewModel() {
-        rvProgressBar.visibility = View.VISIBLE
         viewModel = ViewModelProvider(this).get(DashboardActivityViewModel::class.java)
         viewModel.getRecordListObservable().observe(this, {
             if (it == null) {
@@ -119,6 +122,16 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         })
         viewModel.getRecordList()
         rvProgressBar.visibility = View.GONE
+    }
+
+    private fun deleteRecordObservable() {
+        viewModel.getDeleteRecordDataObservable().observe(this, {
+            if (it != null) {
+                Toast.makeText(this@DashboardActivity, "Unable to delete record.", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this@DashboardActivity, "A record has been deleted.", Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
     private fun redirectToAdd() {
@@ -192,7 +205,47 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
             .setNegativeButton("No") {
                     dialog,_->
+                dialog.cancel()
+            }
+            .create()
+            .show()
+    }
+
+    override fun showHoldMenu(record: Record, view: View) {
+        val holdMenu = PopupMenu(this, view)
+        holdMenu.inflate(R.menu.card_menu)
+        holdMenu.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.editCard -> {
+                    val intent = Intent(this@DashboardActivity, EditRecordActivity::class.java)
+                    intent.putExtra("record_id", record.id.toString())
+                    startActivity(intent)
+                    true
+                }
+                R.id.deleteCard -> {
+                    confirmDelete(record.id.toString())
+                    true
+                }
+                else -> true
+            }
+        }
+        holdMenu.show()
+    }
+
+    private fun confirmDelete(id: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete")
+            .setIcon(R.drawable.ic_delete)
+            .setMessage("Are you sure you want to delete? This action cannot be undone.")
+            .setPositiveButton("Yes") {
+                dialog,_->
+                viewModel.deleteRecord(id)
+                recreate()
                 dialog.dismiss()
+            }
+            .setNegativeButton("No") {
+                dialog,_->
+                dialog.cancel()
             }
             .create()
             .show()

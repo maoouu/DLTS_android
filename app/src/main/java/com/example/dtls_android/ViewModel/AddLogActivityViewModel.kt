@@ -23,7 +23,7 @@ class AddLogActivityViewModel : ViewModel() {
 
         call.enqueue(object: Callback<Record?> {
             override fun onFailure(call: Call<Record?>, t: Throwable) {
-                Log.d(null, "Error: Callback for addNewRecord() has failed.")
+                Log.d(null, "Error: Callback to add new record has failed.")
                 addLogLiveData.postValue(null)
             }
 
@@ -31,7 +31,7 @@ class AddLogActivityViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     addLogLiveData.postValue(response.body())
                 } else {
-                    Log.d(null, "Error: Response for addNewRecord() has failed.")
+                    Log.d(null, "Error: Response to add new record was not successful.")
                     addLogLiveData.postValue(null)
                 }
             }

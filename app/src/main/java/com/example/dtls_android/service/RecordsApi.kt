@@ -13,11 +13,15 @@ interface RecordsApi {
     @Headers("Accept:application/json", "Content-Type:application/json")
     fun createRecord(@Body params: Record): Call<Record>
 
-    @PATCH("api/records/{id}")
+    @GET("api/records/{id}")
+    @Headers("Accept:application/json", "Content-Type:application/json")
+    fun getRecordById(@Path("id") id: String): Call<Record>
+
+    @PUT("api/records/{id}/")
     @Headers("Accept:application/json", "Content-Type:application/json")
     fun updateRecord(@Path("id") id: String, @Body params: Record): Call<Record>
 
-    @DELETE("api/records/{id}")
+    @DELETE("api/records/{id}/")
     @Headers("Accept:application/json", "Content-Type:application/json")
     fun deleteRecord(@Path("id")id: String): Call<Record>
 

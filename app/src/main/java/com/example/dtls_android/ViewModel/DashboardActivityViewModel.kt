@@ -13,9 +13,14 @@ import java.util.*
 class DashboardActivityViewModel: ViewModel() {
 
     var recyclerListData: MutableLiveData<List<Record>> = MutableLiveData()
+    var deleteRecordData: MutableLiveData<Record> = MutableLiveData()
 
     fun getRecordListObservable(): MutableLiveData<List<Record>> {
         return recyclerListData
+    }
+
+    fun getDeleteRecordDataObservable(): MutableLiveData<Record> {
+        return deleteRecordData
     }
 
     fun getRecordList() {
@@ -68,6 +73,28 @@ class DashboardActivityViewModel: ViewModel() {
                     recyclerListData.postValue(null)
                 }
             }
+        })
+    }
+
+    fun deleteRecord(id: String) {
+        val api = RetrofitClient.webservice
+        val call = api.deleteRecord(id)
+
+        call.enqueue(object: Callback<Record> {
+            override fun onResponse(call: Call<Record>, response: Response<Record>) {
+                if (response.isSuccessful) {
+                    deleteRecordData.postValue(response.body())
+                } else {
+                    Log.d(null, "Error: Response to delete record was not successful.")
+                    deleteRecordData.postValue(null)
+                }
+            }
+
+            override fun onFailure(call: Call<Record>, t: Throwable) {
+                Log.d(null, "Error: Callback to delete record has failed.")
+                deleteRecordData.postValue(null)
+            }
+
         })
     }
 }

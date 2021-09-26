@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Record(
     @SerializedName("id")
-    val id: Int? = null,
+    val id: String? = null,
     @SerializedName("author")
     var author: String = "",
     @SerializedName("date_created")

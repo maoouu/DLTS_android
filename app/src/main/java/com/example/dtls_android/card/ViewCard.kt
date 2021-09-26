@@ -27,7 +27,7 @@ class ViewCard {
     }
 
     fun setCardValues(record: Record): ViewCard {
-        val formattedDate = CardUtils.getFormattedDate(record.dateModified!!, "L/dd/yy")
+        val formattedDate = CardUtils.getFormattedDate(record.dateModified, "L/dd/yy")
         viewAuthor.text = record.author
         viewDesc.text = record.description
         viewDate.text = context.getString(R.string.viewDateTextString, formattedDate)
