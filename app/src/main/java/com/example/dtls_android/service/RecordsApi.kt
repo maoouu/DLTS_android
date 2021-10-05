@@ -5,6 +5,7 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface RecordsApi {
+
     @GET("api/records/")
     @Headers("Accept:application/json", "Content-Type:application/json")
     fun getRecordsList(): Call<List<Record>>
@@ -25,6 +26,4 @@ interface RecordsApi {
     @Headers("Accept:application/json", "Content-Type:application/json")
     fun deleteRecord(@Path("id")id: String): Call<Record>
 
-    // TODO: Handle HTTP GET, POST, PATCH, DELETE
-    // https://www.youtube.com/watch?v=TJpk7ezvtGo
 }

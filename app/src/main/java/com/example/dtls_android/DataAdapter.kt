@@ -3,27 +3,21 @@ package com.example.dtls_android
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dtls_android.card.CardUtils
 import com.example.dtls_android.card.ViewCard
 import com.example.dtls_android.databinding.ItemLogBinding
-import com.example.dtls_android.service.RetrofitClient
 import com.example.dtls_android.service.response.Record
-import com.google.android.material.textfield.MaterialAutoCompleteTextView
-import com.google.android.material.textfield.TextInputEditText
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class DataAdapter(private val longClickListener: OnItemLongClickListener): RecyclerView.Adapter<DataAdapter.ViewHolder>() {
+
+    interface OnItemLongClickListener {
+        fun showHoldMenu(record: Record, view: View)
+    }
 
     var recordsList = mutableListOf<Record>()
 
@@ -48,10 +42,6 @@ class DataAdapter(private val longClickListener: OnItemLongClickListener): Recyc
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         private val binding = ItemLogBinding.bind(view)
 
-        private lateinit var authorEditField: TextInputEditText
-        private lateinit var descEditField: TextInputEditText
-        private lateinit var statusFieldAuto: MaterialAutoCompleteTextView
-
         fun bind(record: Record) = with(itemView) {
             binding.cardTextTitle.text = record.author
             binding.cardTextStatus.text = record.status
@@ -60,12 +50,6 @@ class DataAdapter(private val longClickListener: OnItemLongClickListener): Recyc
 
             decorateStatus(this.context, record.status)
             setOnClickListener { viewItem(this, recordsList[adapterPosition]) }
-            /**
-            setOnLongClickListener {
-                createPopupMenu(this, it, adapterPosition)
-                return@setOnLongClickListener true
-            }
-            **/
         }
 
         private fun viewItem(view: View, record: Record) = with(view) {
@@ -102,9 +86,5 @@ class DataAdapter(private val longClickListener: OnItemLongClickListener): Recyc
             CardUtils.setIndicatorColor(status, binding.cardTextIndicator)
             CardUtils.setTextColor(context, status, binding.cardTextStatus)
         }
-    }
-
-    interface OnItemLongClickListener {
-        fun showHoldMenu(record: Record, view: View)
     }
 }

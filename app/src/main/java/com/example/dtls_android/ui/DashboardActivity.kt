@@ -47,7 +47,7 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
     private lateinit var mheaderView: View
     private lateinit var mheaderUsername: TextView
     private lateinit var mheaderDesc: TextView
-    lateinit var session: LoginPref
+    private lateinit var session: LoginPref
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +59,6 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
         session.checkLogin()
 
         initMain()
-        rvProgressBar.visibility = View.VISIBLE
         initNavigationView()
         initRecyclerView()
         initViewModel()
@@ -74,6 +73,7 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
         mRecyclerView = findViewById(R.id.recyclerView)
         rvProgressBar = findViewById(R.id.rvProgressBar)
         textNoTask.visibility = View.GONE
+        rvProgressBar.visibility = View.VISIBLE
     }
 
     private fun initNavigationView() {
@@ -85,13 +85,7 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
         mheaderUsername.text = session.getUserDetails()
         mheaderDesc.text = "Hello World!~"
 
-        val toggle = ActionBarDrawerToggle(
-            this,
-            mDrawerLayout,
-            binding.toolbar,
-            0,
-            0
-        )
+        val toggle = ActionBarDrawerToggle(this, mDrawerLayout, binding.toolbar, 0, 0)
         mDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         mNavigationView.setNavigationItemSelectedListener(this)
