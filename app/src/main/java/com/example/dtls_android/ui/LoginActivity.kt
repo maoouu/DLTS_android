@@ -11,8 +11,12 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.ViewModelProvider
 import com.example.dtls_android.R
+import com.example.dtls_android.ViewModel.LoginActivityViewModel
 import com.example.dtls_android.account.AccountManager
+import com.example.dtls_android.service.response.Account
+import com.example.dtls_android.session.AccountPref
 import com.example.dtls_android.session.LoginPref
 
 class LoginActivity : AppCompatActivity() {
@@ -21,18 +25,16 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var btnLogin: Button
     private lateinit var btnSignup: Button
     private lateinit var signupContract: ActivityResultLauncher<Intent>
-    private lateinit var session: LoginPref
+    private lateinit var account: AccountPref
+    private lateinit var viewModel: LoginActivityViewModel
 
     lateinit var accountManager: AccountManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        accountManager = AccountManager()
-        session = LoginPref(this)
-        // check if user is already logged in
-        if (session.isLoggedIn()) {
+        account = AccountPref(this)
+        if (account.isLoggedIn()) {
             redirectToDash()
         }
 
@@ -40,11 +42,14 @@ class LoginActivity : AppCompatActivity() {
         passwordField = findViewById(R.id.passwordLoginField)
         btnLogin = findViewById(R.id.btnLogin)
         btnSignup = findViewById(R.id.btnSignup)
+        viewModel = ViewModelProvider(this).get(LoginActivityViewModel::class.java)
 
-        signupContract = registerForActivityResult(ActivityResultContracts
-            .StartActivityForResult()) { addRegisteredData(it) }
-
-        btnLogin.setOnClickListener{ login() }
+        //signupContract = registerForActivityResult(ActivityResultContracts
+        //    .StartActivityForResult()) { addRegisteredData(it) }
+        loginObservable()
+        btnLogin.setOnClickListener{
+            login(usernameField.text.toString().trim(), passwordField.text.toString().trim())
+        }
         btnSignup.setOnClickListener{ register() }
     }
 
@@ -52,6 +57,27 @@ class LoginActivity : AppCompatActivity() {
         exit()
     }
 
+    private fun loginObservable() {
+        viewModel.getLoginAccountDataObservable().observe(this, {
+            if (it == null) {
+                Toast.makeText(this@LoginActivity, "Unable to login.", Toast.LENGTH_LONG).show()
+            } else {
+                account.saveTokenData(it.expiry, it.token)
+                Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+                redirectToDash()
+            }
+        })
+    }
+
+    private fun login(username: String, password: String) {
+        if (username.isBlank() || password.isBlank()) {
+            promptError("Please enter your username and password.")
+        } else {
+            viewModel.login(Account(username, password))
+        }
+    }
+
+    /* Deprecated code
     private fun login() {
         val usernameInput = usernameField.text.toString().trim()
         val passwordInput = passwordField.text.toString().trim()
@@ -66,6 +92,7 @@ class LoginActivity : AppCompatActivity() {
             promptError("Invalid login, please try again.")
         }
     }
+     */
 
     private fun register() {
         val intent = Intent(this@LoginActivity, RegisterActivity::class.java)

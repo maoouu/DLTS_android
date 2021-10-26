@@ -26,6 +26,7 @@ import com.example.dtls_android.R
 import com.example.dtls_android.ViewModel.DashboardActivityViewModel
 import com.example.dtls_android.databinding.ActivityDashboardBinding
 import com.example.dtls_android.service.response.Record
+import com.example.dtls_android.session.AccountPref
 import com.example.dtls_android.session.LoginPref
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -47,7 +48,8 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
     private lateinit var mheaderView: View
     private lateinit var mheaderUsername: TextView
     private lateinit var mheaderDesc: TextView
-    private lateinit var session: LoginPref
+    //private lateinit var session: LoginPref
+    private lateinit var accountSession: AccountPref
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +57,9 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
         val view = binding.root
         setContentView(view)
         setupToolbar()
-        session = LoginPref(this)
-        session.checkLogin()
+        //session = LoginPref(this)
+        //session.checkLogin()
+        accountSession = AccountPref(this)
 
         initMain()
         initNavigationView()
@@ -82,7 +85,7 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
         mheaderView = mNavigationView.getHeaderView(0)
         mheaderUsername = mheaderView.findViewById(R.id.nav_header_username)
         mheaderDesc = mheaderView.findViewById(R.id.nav_header_desc)
-        mheaderUsername.text = session.getUserDetails()
+        mheaderUsername.text = "Test"//session.getUserDetails()
         mheaderDesc.text = "Hello World!~"
 
         val toggle = ActionBarDrawerToggle(this, mDrawerLayout, binding.toolbar, 0, 0)
@@ -114,7 +117,7 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
                 recyclerViewAdapter.notifyDataSetChanged()
             }
         })
-        viewModel.getRecordList()
+        viewModel.getRecordList(accountSession.getToken())
         rvProgressBar.visibility = View.GONE
     }
 
@@ -153,16 +156,16 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val searchString = query!!.toLowerCase(Locale.getDefault()).trim()
                 if (searchString.isNotBlank()) {
-                    viewModel.searchRecord(searchString)
+                    viewModel.searchRecord(searchString, accountSession.getToken())
                 } else {
-                    viewModel.getRecordList()
+                    viewModel.getRecordList(accountSession.getToken())
                 }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText?.trim()?.isBlank() == true) {
-                    viewModel.getRecordList()
+                    viewModel.getRecordList(accountSession.getToken())
                 }
                 return true
             }
@@ -193,7 +196,7 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
             .setMessage("Are you sure you want to sign out?")
             .setPositiveButton("Yes") {
                     dialog,_->
-                session.logoutUser()
+                accountSession.logoutUser()
                 finish()
                 dialog.dismiss()
             }

@@ -23,9 +23,11 @@ class DashboardActivityViewModel: ViewModel() {
         return deleteRecordData
     }
 
-    fun getRecordList() {
+    //fun getRecordList() {
+    fun getRecordList(token: String?) {
         val api = RetrofitClient.webservice
-        val call = api.getRecordsList()
+        //val call = api.getRecordsList()
+        val call = api.getRecordsList("token $token")
 
         call.enqueue(object: Callback<List<Record>> {
             override fun onFailure(call: Call<List<Record>>, t: Throwable) {
@@ -44,9 +46,9 @@ class DashboardActivityViewModel: ViewModel() {
         })
     }
 
-    fun searchRecord(query: String) {
+    fun searchRecord(query: String, token: String?) {
         val api = RetrofitClient.webservice
-        val call = api.getRecordsList()
+        val call = api.getRecordsList("token $token")
 
         call.enqueue(object: Callback<List<Record>> {
             override fun onFailure(call: Call<List<Record>>, t: Throwable) {
