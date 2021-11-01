@@ -33,7 +33,7 @@ class AccountPref {
 
     fun saveTokenData(expiry: String, token: String) {
         editor.putString(EXPIRY_DATE, expiry)
-        editor.putString(USER_TOKEN, token)
+        editor.putString(USER_TOKEN, "token $token")
         editor.putBoolean(IS_LOGGED_IN, true)
         editor.apply()
     }

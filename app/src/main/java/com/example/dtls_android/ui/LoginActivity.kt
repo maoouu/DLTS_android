@@ -77,23 +77,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    /* Deprecated code
-    private fun login() {
-        val usernameInput = usernameField.text.toString().trim()
-        val passwordInput = passwordField.text.toString().trim()
-
-        if (usernameInput.isBlank() || passwordInput.isBlank()) {
-            promptError("Please enter your username and password.")
-        } else if (accountManager.verify(usernameInput, passwordInput)) {
-            session.createLoginSession(usernameInput)
-            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-            redirectToDash()
-        } else {
-            promptError("Invalid login, please try again.")
-        }
-    }
-     */
-
     private fun register() {
         val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
         // TODO: Pass AccountManager to RegisterActivity

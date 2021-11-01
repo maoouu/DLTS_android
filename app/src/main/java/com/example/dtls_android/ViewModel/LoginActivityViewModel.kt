@@ -5,15 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.dtls_android.service.RetrofitClient
 import com.example.dtls_android.service.response.Account
-import com.example.dtls_android.service.response.AccountResponse
+import com.example.dtls_android.service.response.LoginResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Callback
 
 class LoginActivityViewModel : ViewModel() {
-    var loginAccountData: MutableLiveData<AccountResponse> = MutableLiveData()
+    var loginAccountData: MutableLiveData<LoginResponse> = MutableLiveData()
 
-    fun getLoginAccountDataObservable(): MutableLiveData<AccountResponse> {
+    fun getLoginAccountDataObservable(): MutableLiveData<LoginResponse> {
         return loginAccountData
     }
 
@@ -21,10 +21,10 @@ class LoginActivityViewModel : ViewModel() {
         val api = RetrofitClient.webservice
         val call = api.login(account)
 
-        call.enqueue(object: Callback<AccountResponse> {
+        call.enqueue(object: Callback<LoginResponse> {
             override fun onResponse(
-                call: Call<AccountResponse>,
-                response: Response<AccountResponse>
+                call: Call<LoginResponse>,
+                response: Response<LoginResponse>
             ) {
                 if (response.isSuccessful) {
                     loginAccountData.postValue(response.body())
@@ -34,7 +34,7 @@ class LoginActivityViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<AccountResponse>, t: Throwable) {
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 Log.d(null, "Error: Callback to login has failed.")
                 loginAccountData.postValue(null)
             }

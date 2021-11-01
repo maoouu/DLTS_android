@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.dtls_android.R
 import com.example.dtls_android.ViewModel.AddLogActivityViewModel
 import com.example.dtls_android.service.response.Record
+import com.example.dtls_android.session.AccountPref
 import com.google.android.material.textfield.TextInputEditText
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -32,10 +33,12 @@ class AddLogActivity : AppCompatActivity(), AddLogWatcher {
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
     private lateinit var viewModel: AddLogActivityViewModel
+    private lateinit var accountSession: AccountPref
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_log)
+        accountSession = AccountPref(this)
 
         initActivity()
         initViewModel()
@@ -101,6 +104,6 @@ class AddLogActivity : AppCompatActivity(), AddLogWatcher {
         val status = autoCompleteTextView.editableText.toString()
 
         val record = Record(null, author, dateCreated, dateCreated, description, status)
-        viewModel.addNewRecord(record)
+        viewModel.addNewRecord(record, accountSession.getToken())
     }
 }

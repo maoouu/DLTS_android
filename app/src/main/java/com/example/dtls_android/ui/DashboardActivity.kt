@@ -48,7 +48,6 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
     private lateinit var mheaderView: View
     private lateinit var mheaderUsername: TextView
     private lateinit var mheaderDesc: TextView
-    //private lateinit var session: LoginPref
     private lateinit var accountSession: AccountPref
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,15 +56,18 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
         val view = binding.root
         setContentView(view)
         setupToolbar()
-        //session = LoginPref(this)
-        //session.checkLogin()
         accountSession = AccountPref(this)
+
+        if (!accountSession.isLoggedIn()) {
+            accountSession.logoutUser()
+        }
 
         initMain()
         initNavigationView()
         initRecyclerView()
         initViewModel()
         deleteRecordObservable()
+        logoutAccountObservable()
 
         addButton.setOnClickListener { redirectToAdd() }
     }
@@ -121,6 +123,17 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
         rvProgressBar.visibility = View.GONE
     }
 
+    private fun logoutAccountObservable() {
+        viewModel.getLogoutAccountDataObservable().observe(this, {
+            if (it != null) {
+                Toast.makeText(this@DashboardActivity, "Account has been logged out successfully.", Toast.LENGTH_LONG).show()
+                accountSession.logoutUser()
+            } else {
+                Toast.makeText(this@DashboardActivity, "Unable to log out.", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
     private fun deleteRecordObservable() {
         viewModel.getDeleteRecordDataObservable().observe(this, {
             if (it != null) {
@@ -134,6 +147,13 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
     private fun redirectToAdd() {
         val intent = Intent(this, AddLogActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun redirectToLogin() {
+        val intent = Intent(applicationContext, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+        finish()
     }
 
     private fun setupToolbar() {
@@ -189,25 +209,6 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
         return true
     }
 
-    private fun confirmLogout() {
-        AlertDialog.Builder(this)
-            .setTitle("Confirm")
-            .setIcon(R.drawable.ic_signout)
-            .setMessage("Are you sure you want to sign out?")
-            .setPositiveButton("Yes") {
-                    dialog,_->
-                accountSession.logoutUser()
-                finish()
-                dialog.dismiss()
-            }
-            .setNegativeButton("No") {
-                    dialog,_->
-                dialog.cancel()
-            }
-            .create()
-            .show()
-    }
-
     override fun showHoldMenu(record: Record, view: View) {
         val holdMenu = PopupMenu(this, view)
         holdMenu.inflate(R.menu.card_menu)
@@ -229,6 +230,24 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
         holdMenu.show()
     }
 
+    private fun confirmLogout() {
+        AlertDialog.Builder(this)
+            .setTitle("Confirm")
+            .setIcon(R.drawable.ic_signout)
+            .setMessage("Are you sure you want to sign out?")
+            .setPositiveButton("Yes") {
+                    dialog,_->
+                viewModel.logout(accountSession.getToken())
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") {
+                    dialog,_->
+                dialog.cancel()
+            }
+            .create()
+            .show()
+    }
+
     private fun confirmDelete(id: String) {
         AlertDialog.Builder(this)
             .setTitle("Delete")
@@ -236,7 +255,7 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
             .setMessage("Are you sure you want to delete? This action cannot be undone.")
             .setPositiveButton("Yes") {
                 dialog,_->
-                viewModel.deleteRecord(id)
+                viewModel.deleteRecord(id, accountSession.getToken())
                 recreate()
                 dialog.dismiss()
             }

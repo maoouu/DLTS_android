@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.dtls_android.R
 import com.example.dtls_android.ViewModel.EditRecordActivityViewModel
 import com.example.dtls_android.service.response.Record
+import com.example.dtls_android.session.AccountPref
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import java.time.LocalDate
@@ -36,12 +37,14 @@ class EditRecordActivity : AppCompatActivity(), EditLogWatcher {
     private lateinit var descString: String
     private lateinit var statusString: String
     private lateinit var dateCreatedString: String
+    private lateinit var accountSession: AccountPref
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_log)
         val recordId = intent.getStringExtra("record_id")!!
+        accountSession = AccountPref(this)
 
         initActivity()
         initViewModel()
@@ -85,7 +88,7 @@ class EditRecordActivity : AppCompatActivity(), EditLogWatcher {
                 autoCompleteEditTextView.setAdapter(dropdownAdapter)
             }
         })
-        viewModel.getRecordById(id)
+        viewModel.getRecordById(id, accountSession.getToken())
     }
 
     private fun updateRecordObservable() {
@@ -109,7 +112,7 @@ class EditRecordActivity : AppCompatActivity(), EditLogWatcher {
         val status = autoCompleteEditTextView.editableText.toString()
 
         val record = Record(id, author, dateCreated, dateModified, description, status)
-        viewModel.updateRecord(id, record)
+        viewModel.updateRecord(id, record, accountSession.getToken())
     }
 
     override fun afterTextChanged(p0: Editable?) {

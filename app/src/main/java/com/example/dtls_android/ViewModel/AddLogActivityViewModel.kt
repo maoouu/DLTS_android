@@ -17,25 +17,27 @@ class AddLogActivityViewModel : ViewModel() {
         return addLogLiveData
     }
 
-    fun addNewRecord(record: Record) {
-        val api = RetrofitClient.webservice
-        val call = api.createRecord(record)
+    fun addNewRecord(record: Record, token: String?) {
+        if (token != null) {
+            val api = RetrofitClient.webservice
+            val call = api.createRecord(record, token)
 
-        call.enqueue(object: Callback<Record?> {
-            override fun onFailure(call: Call<Record?>, t: Throwable) {
-                Log.d(null, "Error: Callback to add new record has failed.")
-                addLogLiveData.postValue(null)
-            }
-
-            override fun onResponse(call: Call<Record?>, response: Response<Record?>) {
-                if (response.isSuccessful) {
-                    addLogLiveData.postValue(response.body())
-                } else {
-                    Log.d(null, "Error: Response to add new record was not successful.")
+            call.enqueue(object: Callback<Record?> {
+                override fun onFailure(call: Call<Record?>, t: Throwable) {
+                    Log.d(null, "Error: Callback to add new record has failed.")
                     addLogLiveData.postValue(null)
                 }
-            }
-        })
+
+                override fun onResponse(call: Call<Record?>, response: Response<Record?>) {
+                    if (response.isSuccessful) {
+                        addLogLiveData.postValue(response.body())
+                    } else {
+                        Log.d(null, "Error: Response to add new record was not successful.")
+                        addLogLiveData.postValue(null)
+                    }
+                }
+            })
+        }
     }
 
 }

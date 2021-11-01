@@ -22,48 +22,52 @@ class EditRecordActivityViewModel : ViewModel() {
         return updateRecordData
     }
 
-    fun getRecordById(id: String) {
-        val api = RetrofitClient.webservice
-        val call = api.getRecordById(id)
+    fun getRecordById(id: String, token: String?) {
+        if (token != null) {
+            val api = RetrofitClient.webservice
+            val call = api.getRecordById(id, token)
 
-        call.enqueue(object: Callback<Record?> {
-            override fun onResponse(call: Call<Record?>, response: Response<Record?>) {
-                if (response.isSuccessful) {
-                    loadRecordData.postValue(response.body())
-                } else {
-                    Log.d(null, "Error: Response to retrieve data was not successful.")
+            call.enqueue(object: Callback<Record?> {
+                override fun onResponse(call: Call<Record?>, response: Response<Record?>) {
+                    if (response.isSuccessful) {
+                        loadRecordData.postValue(response.body())
+                    } else {
+                        Log.d(null, "Error: Response to retrieve data was not successful.")
+                        loadRecordData.postValue(null)
+                    }
+                }
+
+                override fun onFailure(call: Call<Record?>, t: Throwable) {
+                    Log.d(null, "Error: Callback to retrieve data has failed.")
                     loadRecordData.postValue(null)
                 }
-            }
 
-            override fun onFailure(call: Call<Record?>, t: Throwable) {
-                Log.d(null, "Error: Callback to retrieve data has failed.")
-                loadRecordData.postValue(null)
-            }
-
-        })
+            })
+        }
     }
 
-    fun updateRecord(id: String, record: Record) {
-        val api = RetrofitClient.webservice
-        val call = api.updateRecord(id, record)
+    fun updateRecord(id: String, record: Record, token: String?) {
+        if (token != null) {
+            val api = RetrofitClient.webservice
+            val call = api.updateRecord(id, record, token)
 
-        call.enqueue(object: Callback<Record?> {
-            override fun onResponse(call: Call<Record?>, response: Response<Record?>) {
-                if (response.isSuccessful) {
-                    updateRecordData.postValue(response.body())
-                } else {
-                    Log.d(null,"Error: Callback for updateRecord() has failed.")
+            call.enqueue(object: Callback<Record?> {
+                override fun onResponse(call: Call<Record?>, response: Response<Record?>) {
+                    if (response.isSuccessful) {
+                        updateRecordData.postValue(response.body())
+                    } else {
+                        Log.d(null,"Error: Callback for updateRecord() has failed.")
+                        updateRecordData.postValue(null)
+                    }
+                }
+
+                override fun onFailure(call: Call<Record?>, t: Throwable) {
+                    Log.d(null, "Error: Unable to update record.")
                     updateRecordData.postValue(null)
                 }
-            }
 
-            override fun onFailure(call: Call<Record?>, t: Throwable) {
-                Log.d(null, "Error: Unable to update record.")
-                updateRecordData.postValue(null)
-            }
-
-        })
+            })
+        }
     }
 
 
