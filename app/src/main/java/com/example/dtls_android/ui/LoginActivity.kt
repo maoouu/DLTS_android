@@ -24,11 +24,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passwordField: EditText
     private lateinit var btnLogin: Button
     private lateinit var btnSignup: Button
-    private lateinit var signupContract: ActivityResultLauncher<Intent>
     private lateinit var account: AccountPref
     private lateinit var viewModel: LoginActivityViewModel
-
-    lateinit var accountManager: AccountManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,20 +34,19 @@ class LoginActivity : AppCompatActivity() {
         if (account.isLoggedIn()) {
             redirectToDash()
         }
-
         usernameField = findViewById(R.id.usernameLoginField)
         passwordField = findViewById(R.id.passwordLoginField)
         btnLogin = findViewById(R.id.btnLogin)
         btnSignup = findViewById(R.id.btnSignup)
         viewModel = ViewModelProvider(this).get(LoginActivityViewModel::class.java)
 
-        //signupContract = registerForActivityResult(ActivityResultContracts
-        //    .StartActivityForResult()) { addRegisteredData(it) }
-        loginObservable()
         btnLogin.setOnClickListener{
             login(usernameField.text.toString().trim(), passwordField.text.toString().trim())
         }
-        btnSignup.setOnClickListener{ register() }
+        btnSignup.setOnClickListener{
+            register()
+        }
+        loginObservable()
     }
 
     override fun onBackPressed() {
@@ -62,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
             if (it == null) {
                 Toast.makeText(this@LoginActivity, "Unable to login.", Toast.LENGTH_LONG).show()
             } else {
-                account.saveTokenData(it.expiry, it.token)
+                account.saveTokenData(usernameField.text.toString(), it.expiry, it.token)
                 Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
                 redirectToDash()
             }
@@ -79,18 +75,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun register() {
         val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-        // TODO: Pass AccountManager to RegisterActivity
-        intent.putExtra("ACCOUNTMANAGER", accountManager)
-        signupContract.launch(intent)
-    }
-
-    private fun addRegisteredData(result: ActivityResult?) {
-        if (result?.resultCode == Activity.RESULT_OK) {
-            val username = result.data?.getStringExtra("USERNAME")!!
-            val password = result.data?.getStringExtra("PASSWORD")!!
-            accountManager.addAccount(username, password)
-            Toast.makeText(this, "$username has been added ($password)", Toast.LENGTH_LONG).show()
-        }
+        startActivity(intent)
     }
 
     private fun exit() {

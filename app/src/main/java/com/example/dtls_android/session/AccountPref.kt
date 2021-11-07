@@ -20,6 +20,7 @@ class AccountPref {
 
     companion object {
         const val SHARED_PREF = "Account_Preferences"
+        const val USER_NAME = "User_Name"
         const val EXPIRY_DATE = "Expiry_Date"
         const val IS_LOGGED_IN = "Is_Logged_In"
         const val USER_TOKEN = "User_Token"
@@ -31,7 +32,8 @@ class AccountPref {
         editor = sharedPreferences.edit()
     }
 
-    fun saveTokenData(expiry: String, token: String) {
+    fun saveTokenData(username: String, expiry: String, token: String) {
+        editor.putString(USER_NAME, username)
         editor.putString(EXPIRY_DATE, expiry)
         editor.putString(USER_TOKEN, "token $token")
         editor.putBoolean(IS_LOGGED_IN, true)
@@ -40,6 +42,10 @@ class AccountPref {
 
     fun getToken(): String? {
         return sharedPreferences.getString(USER_TOKEN, null)
+    }
+
+    fun getUsername(): String? {
+        return sharedPreferences.getString(USER_NAME, null)
     }
 
     fun isLoggedIn(): Boolean {

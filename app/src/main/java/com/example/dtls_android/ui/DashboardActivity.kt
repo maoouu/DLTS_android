@@ -87,7 +87,7 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
         mheaderView = mNavigationView.getHeaderView(0)
         mheaderUsername = mheaderView.findViewById(R.id.nav_header_username)
         mheaderDesc = mheaderView.findViewById(R.id.nav_header_desc)
-        mheaderUsername.text = "Test"//session.getUserDetails()
+        mheaderUsername.text = accountSession.getUsername()
         mheaderDesc.text = "Hello World!~"
 
         val toggle = ActionBarDrawerToggle(this, mDrawerLayout, binding.toolbar, 0, 0)
@@ -147,13 +147,6 @@ class DashboardActivity : AppCompatActivity(), DataAdapter.OnItemLongClickListen
     private fun redirectToAdd() {
         val intent = Intent(this, AddLogActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun redirectToLogin() {
-        val intent = Intent(applicationContext, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
-        finish()
     }
 
     private fun setupToolbar() {
