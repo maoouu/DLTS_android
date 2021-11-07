@@ -37,14 +37,14 @@
         Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a,
         venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus</string>
 
-    <string name="BUILD_VER">dev build 08.16.2021</string>
+    <string name="BUILD_VER">dev build 11.07.2021</string>
     <string name="viewDateTextString">last edited %1$s</string>
 
     <string-array name="status">
         <item>Pending</item>
         <item>Acknowledged</item>
         <item>Endorsed</item>
-        <item>Recommended to the President</item>
+        <item>Recommended to President</item>
         <item>Approved</item>
         <item>Denied</item>
         <item>Returned</item>

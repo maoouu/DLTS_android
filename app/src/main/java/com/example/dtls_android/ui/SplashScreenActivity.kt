@@ -1,4 +1,4 @@
-package com.example.dtls_android
+package com.example.dtls_android.ui
 
 import android.content.Intent
 import android.os.Build
@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.view.WindowInsets
+import com.example.dtls_android.R
 
 class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

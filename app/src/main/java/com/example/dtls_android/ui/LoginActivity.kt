@@ -1,4 +1,4 @@
-package com.example.dtls_android
+package com.example.dtls_android.ui
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -11,7 +11,12 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.ViewModelProvider
+import com.example.dtls_android.R
+import com.example.dtls_android.ViewModel.LoginActivityViewModel
 import com.example.dtls_android.account.AccountManager
+import com.example.dtls_android.service.response.Account
+import com.example.dtls_android.session.AccountPref
 import com.example.dtls_android.session.LoginPref
 
 class LoginActivity : AppCompatActivity() {
@@ -19,67 +24,58 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passwordField: EditText
     private lateinit var btnLogin: Button
     private lateinit var btnSignup: Button
-    private lateinit var signupContract: ActivityResultLauncher<Intent>
-    private lateinit var session: LoginPref
-
-    lateinit var accountManager: AccountManager
+    private lateinit var account: AccountPref
+    private lateinit var viewModel: LoginActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        accountManager = AccountManager()
-        session = LoginPref(this)
-        // check if user is already logged in
-        if (session.isLoggedIn()) {
+        account = AccountPref(this)
+        if (account.isLoggedIn()) {
             redirectToDash()
         }
-
         usernameField = findViewById(R.id.usernameLoginField)
         passwordField = findViewById(R.id.passwordLoginField)
         btnLogin = findViewById(R.id.btnLogin)
         btnSignup = findViewById(R.id.btnSignup)
+        viewModel = ViewModelProvider(this).get(LoginActivityViewModel::class.java)
 
-        signupContract = registerForActivityResult(ActivityResultContracts
-            .StartActivityForResult()) { addRegisteredData(it) }
-
-        btnLogin.setOnClickListener{ login() }
-        btnSignup.setOnClickListener{ register() }
+        btnLogin.setOnClickListener{
+            login(usernameField.text.toString().trim(), passwordField.text.toString().trim())
+        }
+        btnSignup.setOnClickListener{
+            register()
+        }
+        loginObservable()
     }
 
     override fun onBackPressed() {
         exit()
     }
 
-    private fun login() {
-        val usernameInput = usernameField.text.toString().trim()
-        val passwordInput = passwordField.text.toString().trim()
+    private fun loginObservable() {
+        viewModel.getLoginAccountDataObservable().observe(this, {
+            if (it == null) {
+                Toast.makeText(this@LoginActivity, "Unable to login.", Toast.LENGTH_LONG).show()
+            } else {
+                account.saveTokenData(usernameField.text.toString(), it.expiry, it.token)
+                Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+                redirectToDash()
+            }
+        })
+    }
 
-        if (usernameInput.isBlank() || passwordInput.isBlank()) {
+    private fun login(username: String, password: String) {
+        if (username.isBlank() || password.isBlank()) {
             promptError("Please enter your username and password.")
-        } else if (accountManager.verify(usernameInput, passwordInput)) {
-            session.createLoginSession(usernameInput)
-            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-            redirectToDash()
         } else {
-            promptError("Invalid login, please try again.")
+            viewModel.login(Account(username, password))
         }
     }
 
     private fun register() {
         val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-        // TODO: Pass AccountManager to RegisterActivity
-        intent.putExtra("ACCOUNTMANAGER", accountManager)
-        signupContract.launch(intent)
-    }
-
-    private fun addRegisteredData(result: ActivityResult?) {
-        if (result?.resultCode == Activity.RESULT_OK) {
-            val username = result.data?.getStringExtra("USERNAME")!!
-            val password = result.data?.getStringExtra("PASSWORD")!!
-            accountManager.addAccount(username, password)
-            Toast.makeText(this, "$username has been added ($password)", Toast.LENGTH_LONG).show()
-        }
+        startActivity(intent)
     }
 
     private fun exit() {
